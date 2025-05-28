@@ -56,15 +56,7 @@
     <a name="circuit" val="main"/>
     <a name="circuitnamedboxfixedsize" val="true"/>
     <a name="simulationFrequency" val="1.0"/>
-    <comp lib="1" loc="(280,190)" name="AND Gate"/>
-    <comp lib="1" loc="(290,110)" name="AND Gate">
-      <a name="size" val="30"/>
-    </comp>
-    <comp lib="1" loc="(300,280)" name="NAND Gate"/>
     <comp loc="(920,250)" name="ALU"/>
-    <wire from="(290,110)" to="(490,110)"/>
-    <wire from="(490,110)" to="(490,250)"/>
-    <wire from="(490,250)" to="(700,250)"/>
   </circuit>
   <circuit name="ALU">
     <a name="appearance" val="logisim_evolution"/>
