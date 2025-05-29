@@ -4,3 +4,5 @@
 #### [ChiliTomatoNoodle](https://www.youtube.com/watch?v=Kbbzwabgtok&list=PLqCJpWy5Fohdz6Nu2yG6Loubocqk3sRNR)
 #### [CoreDumped](https://www.youtube.com/@CoreDumpped)
 #### [rj45 Creates](https://www.youtube.com/watch?v=FSVhlqE7EgA&list=PLilenfQGj6CEG6iZ4TQJ10PI7pCWsy1AO)
+
+--albert paul malvino digital computer electronics
