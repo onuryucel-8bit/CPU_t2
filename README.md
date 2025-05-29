@@ -1,5 +1,5 @@
 -Kaynaklar
-* [**nand2tetris**:]([http://aosabook.org/en/500L/a-3d-modeller.html](https://www.youtube.com/watch?v=LqirVc5SlW0&list=PLrDd_kMiAuNmSb-CKWQqq9oBFN_KNMTaI&index=1))
+* [**nand2tetris**](http://aosabook.org/en/500L/a-3d-modeller.html](https://www.youtube.com/watch?v=LqirVc5SlW0&list=PLrDd_kMiAuNmSb-CKWQqq9oBFN_KNMTaI&index=1)
 #### *BenEater https://www.youtube.com/@BenEater
 #### ChiliTomatoNoodle https://www.youtube.com/watch?v=Kbbzwabgtok&list=PLqCJpWy5Fohdz6Nu2yG6Loubocqk3sRNR
 #### CoreDumped https://www.youtube.com/@CoreDumpped
