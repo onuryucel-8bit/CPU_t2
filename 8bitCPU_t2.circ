@@ -83,8 +83,8 @@
     </comp>
     <comp lib="0" loc="(660,310)" name="Splitter">
       <a name="facing" val="west"/>
-      <a name="fanout" val="8"/>
-      <a name="incoming" val="8"/>
+      <a name="fanout" val="6"/>
+      <a name="incoming" val="6"/>
     </comp>
     <comp lib="0" loc="(750,570)" name="Pin">
       <a name="appearance" val="NewPins"/>
@@ -572,15 +572,26 @@
     <a name="circuit" val="ControlUnit"/>
     <a name="circuitnamedboxfixedsize" val="true"/>
     <a name="simulationFrequency" val="1.0"/>
-    <comp lib="0" loc="(340,1020)" name="Pin">
+    <comp lib="0" loc="(420,1010)" name="Pin">
       <a name="appearance" val="NewPins"/>
       <a name="label" val="outputSignals"/>
       <a name="output" val="true"/>
-      <a name="width" val="8"/>
+      <a name="width" val="6"/>
     </comp>
-    <comp lib="0" loc="(450,1130)" name="Splitter">
-      <a name="fanout" val="8"/>
-      <a name="incoming" val="8"/>
+    <comp lib="0" loc="(420,1480)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="label" val="outRightSignal"/>
+      <a name="output" val="true"/>
+      <a name="width" val="6"/>
+    </comp>
+    <comp lib="0" loc="(450,1480)" name="Splitter">
+      <a name="fanout" val="6"/>
+      <a name="incoming" val="6"/>
+      <a name="spacing" val="8"/>
+    </comp>
+    <comp lib="0" loc="(450,970)" name="Splitter">
+      <a name="fanout" val="6"/>
+      <a name="incoming" val="6"/>
       <a name="spacing" val="8"/>
     </comp>
     <comp lib="0" loc="(490,470)" name="Pin">
@@ -627,8 +638,9 @@
       <a name="max" val="0x7"/>
       <a name="width" val="3"/>
     </comp>
-    <wire from="(340,1020)" to="(450,1020)"/>
-    <wire from="(450,1020)" to="(450,1130)"/>
+    <wire from="(420,1010)" to="(450,1010)"/>
+    <wire from="(420,1480)" to="(450,1480)"/>
+    <wire from="(450,970)" to="(450,1010)"/>
     <wire from="(470,560)" to="(560,560)"/>
     <wire from="(470,640)" to="(560,640)"/>
     <wire from="(470,720)" to="(560,720)"/>
