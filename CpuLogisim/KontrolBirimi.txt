@@ -1,0 +1,29 @@
+
+========FETCH=========
+--------t0--------
+pc_enb  //pc++;
+mux_enb //pc => mar
+mar_enb //mar = pc;
+
+--------t1---------
+ram_out //ara_hat = ram[mar];
+mdr_enb //mdr = ara_hat
+
+---------t2--------
+mdr_out_enb 		//ana_hat = mdr
+instruction_reg_enb //instruction_reg_enb = ana_hat
+========================
+
+DECODE--------------
+
+EXECUTE
+---------t3---------
+
+
+LOAD:
+t3[]
+	ram_out;
+	mdr_in;
+t4[]
+	regx_enb;
+
