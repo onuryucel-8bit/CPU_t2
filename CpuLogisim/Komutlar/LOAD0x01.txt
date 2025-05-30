@@ -1,0 +1,49 @@
+LOAD 0x01:
+
+LOAD rx,(sayi)
+LOAD r0, 0xf5 => hex(0x01,0x00,0xf5)
+
+t3 : 
+------------------------------
+	MAR;
+	MUX_enb;
+	PC_enb;
+	
+	mar = pc;
+	ram.adres = mar;
+	pc++;	
+
+	
+t4[]------------------------------
+	PC_enb;
+	MUX_enb;
+	MAR;
+	RAM_out;
+	MDR_WE;
+	
+	pc++;
+	mar = pc;
+	mdr = ram;
+	
+	//0x01 parcasi mdr icinde
+	
+t5[]------------------------------
+	MDR_out;
+	postaA_we;
+	RAM_out;
+	MDR_we;
+	
+	postaA = mdr;
+	mdr = ram;
+	
+	//postaA icinde rx parcasi var
+	
+t6[]------------------------------
+	postaA_out;
+	MDR_out;
+	RegFile_WE;
+	
+	RegFile[postaA] = mdr;
+	
+	//rx icinde sayi var
+	
