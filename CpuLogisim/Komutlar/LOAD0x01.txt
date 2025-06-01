@@ -1,49 +1,67 @@
+
+-----------------------------
 LOAD 0x01:
+Adim sayisi: 5
+byte: 3 [opcode][reg][sayi]
+-----------------------------
+
+*********************************
+yazim ornegi:
 
 LOAD rx,(sayi)
-LOAD r0, 0xf5 => hex(0x01,0x00,0xf5)
+LOAD r0, 0xf5 => [0x01,0x00,0xf5]
+*********************************
 
 t3 : 
-------------------------------
-	MAR;
-	MUX_enb;
-	PC_enb;
-	
-	mar = pc;
-	ram.adres = mar;
-	pc++;	
+==============================|
+	MAR = 1;                  |
+	MUX_enb = 1;              |
+	PC_enb = 1;               |
+	                          |
+	mar <= pc;                |
+	ram.adres <= mar;         |
+	pc++;	                  |
+==============================|
+
+
+t4: 0x01 parcasi mdr icinde
+==============================|
+	PC_enb = 1;		          |
+	MUX_enb = 1;              |
+	MAR_we = 1;               |
+	RAM_out = 1;              |
+	MDR_WE = 1;               |
+	                          |
+	pc++;                     |
+	mar <= pc;                |
+	mdr <= ram;				  |
+							  |
+==============================|							  
 
 	
-t4[]------------------------------
-	PC_enb;
-	MUX_enb;
-	MAR;
-	RAM_out;
-	MDR_WE;
+t5: postaA icinde rx parcasi var
+==============================|
+	MDR_out;                  |
+	postaA_we;                |
+							  |
+	postaA <= mdr;            |
+							  |
+	                          |
+==============================|
+
+t6
+	RAM_out;                  
+	MDR_we; 
 	
-	pc++;
-	mar = pc;
-	mdr = ram;
-	
-	//0x01 parcasi mdr icinde
-	
-t5[]------------------------------
-	MDR_out;
-	postaA_we;
-	RAM_out;
-	MDR_we;
-	
-	postaA = mdr;
-	mdr = ram;
-	
-	//postaA icinde rx parcasi var
-	
-t6[]------------------------------
-	postaA_out;
-	MDR_out;
-	RegFile_WE;
-	
-	RegFile[postaA] = mdr;
-	
-	//rx icinde sayi var
-	
+	mdr <= ram; 
+
+
+t7: rx icinde sayi var
+==============================|
+	postaA_out;               |
+	MDR_out;                  |
+	RegFile_WE;               |
+	                          |
+	RegFile[postaA] <= mdr;   |
+	                          |
+==============================|
