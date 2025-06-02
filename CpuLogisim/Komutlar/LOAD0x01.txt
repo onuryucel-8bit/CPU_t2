@@ -1,7 +1,7 @@
 
 -----------------------------
 LOAD 0x01:
-Adim sayisi: 5
+Adim sayisi: 
 byte: 3 [opcode][reg][sayi]
 -----------------------------
 
@@ -15,7 +15,6 @@ LOAD r0, 0xf5 => [0x01,0x00,0xf5]
 t3 : 
 ==============================|
 	MAR = 1;                  |
-	MUX_enb = 1;              |
 	PC_enb = 1;               |
 	                          |
 	mar <= pc;                |
@@ -27,7 +26,6 @@ t3 :
 t4: 0x01 parcasi mdr icinde
 ==============================|
 	PC_enb = 1;		          |
-	MUX_enb = 1;              |
 	MAR_we = 1;               |
 	RAM_out = 1;              |
 	MDR_WE = 1;               |

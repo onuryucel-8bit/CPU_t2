@@ -1,0 +1,36 @@
+01.06.25
+Toplam: 15 bit
+
+Sol Kontrol Bitleri - 7
+========================================
+L0:RAM_out
+L1:RAM_write
+
+L2:PC_enb
+L3:PC_load
+
+L4:MAR_we
+
+L5:MDR_we
+L6:MDR_out
+========================================
+
+Sag Kontrol Bitleri - 6
+========================================
+R0:I3B	//ilk 3 bit => ALU
+R1:aluMUX_enb
+R2:alu_out
+
+R3:TEMP_we
+R4:IR_we
+
+R5:REGFILE_we
+R6:REGFILE_out //regfile => anahat
+========================================
+
+Kontrol Birimi
+--------------
+postaA_out : 0
+postaB_out : 1
+postaA_we  : 2
+postaB_we  : 3
