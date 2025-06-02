@@ -1,36 +1,42 @@
 01.06.25
 Toplam: 15 bit
 
+DURDURMA kontrol bitleri
+
+
 Sol Kontrol Bitleri - 7
 ========================================
-L0:RAM_out
-L1:RAM_write
+0 L0:RAM_out						
+1 L1:RAM_write	
 
-L2:PC_enb
-L3:PC_load
+2 L2:PC_enb
+3 L3:PC_load
 
-L4:MAR_we
+4 L4:MAR_we
 
-L5:MDR_we
-L6:MDR_out
+5 L5:MDR_we
+6 L6:MDR_out
 ========================================
 
 Sag Kontrol Bitleri - 6
 ========================================
-R0:I3B	//ilk 3 bit => ALU
-R1:aluMUX_enb
-R2:alu_out
+7 R0:I3B	//ilk 3 bit => ALU
+8 R1:ACC_we
+9 R2:aluMUX_enb
+10 R3:ACC_out
 
-R3:TEMP_we
-R4:IR_we
+11 R4:TEMP_we
+12 R5:IR_we
 
-R5:REGFILE_we
-R6:REGFILE_out //regfile => anahat
+13 R6:REGFILE_we
+14 R7:REGFILE_out //regfile => anahat
+
+15 R8:OUT_we
 ========================================
 
 Kontrol Birimi
 --------------
-postaA_out : 0
-postaB_out : 1
-postaA_we  : 2
-postaB_we  : 3
+15 postaA_out : 0
+16 postaB_out : 1
+17 postaA_we  : 2
+18 postaB_we  : 3
