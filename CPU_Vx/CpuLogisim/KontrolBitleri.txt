@@ -12,10 +12,11 @@ Sol Kontrol Bitleri - 7
 2 L2:PC_enb
 3 L3:PC_load
 
-4 L4:MAR_we
+4 L4:MUX_enb //STR vb. komutlar icin
+5 L5:MAR_we
 
-5 L5:MDR_we
-6 L6:MDR_out
+6 L6:MDR_we
+7 L7:MDR_out
 ========================================
 
 Sag Kontrol Bitleri - 6
@@ -23,20 +24,24 @@ Sag Kontrol Bitleri - 6
 7 R0:I3B	//ilk 3 bit => ALU
 8 R1:ACC_we
 9 R2:aluMUX_enb
-10 R3:ACC_out
+10 R3:ALU_out
+11 R4:ACC_out
 
-11 R4:TEMP_we
-12 R5:IR_we
+12 R5:TEMP_we
+13 R6:IR_we
 
-13 R6:REGFILE_we
-14 R7:REGFILE_out //regfile => anahat
+14 R7:REGFILE_we
+15 R8:REGFILE_out //regfile => anahat
 
-15 R8:OUT_we
+16 R9:OUT_we
+17 R10:REGPATH_in //ADD rx,0x gibi komutlar icin
 ========================================
 
 Kontrol Birimi
 --------------
 15 postaA_out : 0
-16 postaB_out : 1
-17 postaA_we  : 2
+16 postaA_we  : 1
+17 postaB_out : 2
 18 postaB_we  : 3
+20 adrReg_out : 4
+19 adrReg_we  : 5
