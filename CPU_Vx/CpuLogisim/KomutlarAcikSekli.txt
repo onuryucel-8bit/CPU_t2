@@ -1,0 +1,353 @@
+Durdurma kontrol bitleri 2a00000
+
+00(postaB)[postaA]
+00(00_0)[000]
+
+===Mikro kodlar calismiyorsa
+!!Eger yakalama suresinde oynama yapilirsa 
+	decoder sayacini AYARLA!!
+	
+!!ADRES_ROM 'a bak dogru adresi gosteriyormu? !!
+
+!!BOS KISIMLARI SIFIR OLARAK BIRAK sayac adresi tam almiyor!!
+
+FETCH-YAKALAMA
+{
+	/*
+	24 
+	41 
+	2080 
+	24
+	65
+	*/
+	
+	//t0 24 | pc => mar; pc++;	
+	PC_enb
+	MAR_we
+	
+	//t1 41| ram => mdr
+	//komut => MDR
+	ram_out 
+	mdr_we
+	
+	
+	//komut => IR
+	//t2 2080| mdr => ir 
+	mdr_out 
+	ir_we 	
+	
+	//Ikinci bayti al
+	//t3 24 | pc => mar; pc++;
+	pc_enb 
+	mar_we 
+	
+	//Ucuncu bayt?
+	//komutlarin bircogu 2bayt bu dongude 3.bayt isaret ediliyor
+	//eger komut 3.bayta ihtiyaci yoksa o zaman bu sonraki demektirki
+	//program sayaci sonraki komutu gosteriyor
+	//t4 65		
+	ram_out
+	mdr_we
+	pc_enb
+	mar_we
+	
+	
+	
+	
+}
+
+//CALISIYOR 08.06.25
+
+//bayt3 => rx
+//06
+LOAD 0x01 
+{
+	/*
+	200080	
+	41
+	108080
+	*/
+	
+	//rx => postaA
+
+	//200080
+	table[MDR_out],
+	table[postaA_we],
+	
+	MDR => postaA
+	
+	
+	//41 Ucuncu bayti goster
+	ram_out
+	mdr_we
+	
+	//108080
+	table[MDR_out],
+	table[REGFILE_we],
+	table[postaA_out],
+	MDR => regfile
+	
+	
+	
+	
+
+	
+}
+
+//CALISIYOR 08.06.25
+//0b
+LOAD 0x02
+{
+	/*
+		200080
+		41
+		2000080
+		1000020
+	*/
+	
+	
+	//200080
+	table[MDR_out],
+	table[postaA_we],
+	MDR => postaA
+	
+	//41 Ucuncu bayti goster
+	ram_out
+	mdr_we
+	
+	//2000080
+	//adresi al
+	table[MDR_out],
+	table[adrReg_we],
+	
+	MDR => adresReg
+
+	//1000030
+	table[adrReg_out],
+	table[MAR_we],
+	table[MUX_enb]
+	
+	adresReg => MAR
+	
+	//41 adresteki veriyi mdr ye koy
+	ram_out
+	mdr_we
+	
+	//108080
+	table[MDR_out],
+	table[REGFILE_we],
+	table[postaA_out],
+	MDR => regfile
+}
+
+//CALISIYOR 08.06.25
+STR 0x03
+{
+	/*
+	200080
+	41
+	1000030
+	110002
+	*/
+	//200080
+	table[MDR_out],
+	table[postaA_we],
+	MDR => postaA
+		
+	//41 Ucuncu bayti goster
+	ram_out
+	mdr_we
+	
+	//2000080
+	//adresi al
+	table[MDR_out],
+	table[adrReg_we],
+	
+	//1000030
+	table[adrReg_out],
+	table[MAR_we],
+	
+	adresReg => MAR
+			
+	//110002	
+	table[REGFILE_out],
+	table[postaA_out],
+	table[RAM_we],
+ 
+	RegFile[postaA] => RAM
+}
+
+//CALISIYOR 08.06.25
+MOV 0x04
+{   
+	/*
+	a00080
+	111000
+	488000
+	*/
+
+	//a00080
+	table[MDR_out],
+	table[postaA_we],
+	table[postaB_we],	
+	rx => postaB
+	ry => postaA
+	
+	//111000
+	table[postaA_out],
+	table[REGFILE_out],
+	table[TEMP_we],
+	rx => TEMP
+	
+	//488000
+	table[TEMP_out],
+	table[REGFILE_we],
+	table[postaB_out],
+	TEMP => regfile
+	
+	
+}
+
+OUT 0x05
+{
+	//rx => postaA
+	//rx => outReg	
+}
+
+OUT 0x06
+{
+	//adres => adresReg
+	//adres => MAR
+	//RAM => outReg
+}
+
+OR
+XOR
+AND
+SUB 
+ADD 0x08
+{
+	//a00080
+	table[MDR_out],
+	table[postaA_we],
+	table[postaB_we],	
+	rx => postaB
+	ry => postaA
+	
+	//411000
+	table[postaB_out],
+	table[REGFILE_out],
+	table[TEMP_we],
+	//rx => tempReg
+	
+	
+	//110700
+	//ry => aluAraHat	
+	//rx + ry => ACC
+	table[postaA_out],
+	table[REGFILE_out],
+	table[I3B],
+	table[ALUMUX_enb],
+	table[ACC_we]
+	
+	//408800
+	table[ALU_out],
+	table[REGFILE_we],
+	table[postaB_out],
+	//ACC => regfile
+}
+
+NOT 0x0e
+{
+	//rx => postaA
+	//rx => ALU
+	//ALU => ACC
+	//ACC => regfile
+}
+
+SHL
+SHR
+{
+	//rx => postaA	
+	//ry => postaB
+	
+	//rx => tempReg
+	//ry => ALU.shiftAmount
+	
+	//ALU => ACC
+	//ACC => regfile
+}
+
+SUB
+AND
+OR
+XOR
+ADD 0x10 ADD rx,0x
+{
+	//rx => postaA
+	PC++
+	//rx => tempReg
+	//sayi => aluAraHat
+	//ALU => ACC
+	//ACC => regfile
+}
+
+JMP
+{
+	//adres => adresReg
+	//adresReg => PC	
+}
+
+JZ
+{
+	if(ACC == 0)
+	{
+		//adres => adresReg
+		//adresReg => PC
+	}
+}
+
+JLZ
+{
+	if(ACC < 0)
+	{
+		//adres => adresReg
+		//adresReg => PC
+	}
+}
+
+JGZ
+{
+	if(ACC > 0)
+	{
+		//adres => adresReg
+		//adresReg => PC
+	}
+}
+
+JNZ
+{
+	if(ACC != 0)
+	{
+		//adres => adresReg
+		//adresReg => PC
+	}
+}
+
+JC
+{
+	if(sumCarry == 1)
+	{
+		//adres => adresReg
+		//adresReg => PC
+	}
+}
+
+JSC
+{
+	if(subCarry == 1)
+	{
+		//adres => adresReg
+		//adresReg => PC
+	}
+}

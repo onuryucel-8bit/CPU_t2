@@ -1,0 +1,10 @@
+LOAD r5,fa ; r5 = fa
+LOAD r0,1  ; r0 = 1
+LOAD r1,2  ; r1 = 2
+LOAD r2,3  ; ....
+LOAD r3,4  ; ..
+LOAD r4,5
+LOAD r5,6
+LOAD r6,7
+LOAD r7,8  ; r7 = 8
+

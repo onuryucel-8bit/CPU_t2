@@ -1,8 +1,6 @@
 01.06.25
 Toplam: 15 bit
 
-DURDURMA kontrol bitleri
-
 
 Sol Kontrol Bitleri - 7
 ========================================
@@ -21,27 +19,34 @@ Sol Kontrol Bitleri - 7
 
 Sag Kontrol Bitleri - 6
 ========================================
-7 R0:I3B	//ilk 3 bit => ALU
-8 R1:ACC_we
-9 R2:aluMUX_enb
-10 R3:ALU_out
-11 R4:ACC_out
+8 R0:I3B	//ilk 3 bit => ALU
+9 R1:ACC_we
 
-12 R5:TEMP_we
-13 R6:IR_we
+10 R2:aluMUX_enb
+11 R3:ALU_out
 
-14 R7:REGFILE_we
-15 R8:REGFILE_out //regfile => anahat
+12 R4:TEMP_we
+*******************
+13 R5:IR_we
+14 R6:REGPATH_in //ADD rx,0x gibi komutlar icin
 
-16 R9:OUT_we
-17 R10:REGPATH_in //ADD rx,0x gibi komutlar icin
+15 R7:REGFILE_we
+16 R8:REGFILE_out //regfile => anahat
+
+17 R9:CMP_out
+18 R10:OUT_we
+
+19 R11:TEMP_out //TEMP => data bus
+
 ========================================
 
 Kontrol Birimi
 --------------
-15 postaA_out : 0
-16 postaA_we  : 1
-17 postaB_out : 2
-18 postaB_we  : 3
-20 adrReg_out : 4
-19 adrReg_we  : 5
+20 postaA_out : 0
+21 postaA_we  : 1
+
+22 postaB_out : 2
+23 postaB_we  : 3
+
+24 adrReg_out : 4
+25 adrReg_we  : 5

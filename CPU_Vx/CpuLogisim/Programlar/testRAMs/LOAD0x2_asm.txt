@@ -1,0 +1,1 @@
+LOAD r5,@ff ;ff adresindeki sayiyi r5 e at

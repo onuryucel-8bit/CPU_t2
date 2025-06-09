@@ -1,0 +1,3 @@
+LOAD r1,aa
+LOAD r2,bb
+MOV r1,r2 ;r1 = r2

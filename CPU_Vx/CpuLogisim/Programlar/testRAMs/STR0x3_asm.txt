@@ -1,0 +1,2 @@
+LOAD r4,ab ; r4 = ab
+STR ff,r4  ; ram[0xff] = r4
