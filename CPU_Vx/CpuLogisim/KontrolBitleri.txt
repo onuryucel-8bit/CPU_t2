@@ -37,7 +37,6 @@ Sag Kontrol Bitleri - 6
 18 R10:OUT_we
 
 19 R11:TEMP_out //TEMP => data bus
-
 ========================================
 
 Kontrol Birimi

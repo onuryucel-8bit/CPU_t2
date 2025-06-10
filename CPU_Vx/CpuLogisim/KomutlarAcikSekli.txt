@@ -33,8 +33,8 @@ FETCH-YAKALAMA
 	
 	//komut => IR
 	//t2 2080| mdr => ir 
-	mdr_out 
 	ir_we 	
+	mdr_out 
 	
 	//Ikinci bayti al
 	//t3 24 | pc => mar; pc++;
@@ -255,7 +255,7 @@ OUT 0x06
 	MDR => outReg
 }
 
-//CALISIYOR ? 09.06.2025
+//CALISIYOR  09.06.2025
 OR
 XOR
 AND
@@ -264,7 +264,7 @@ ADD 0x08
 {
 	/*
 	a00080
-	a00080
+	411000
 	110700
 	408800
 	*/

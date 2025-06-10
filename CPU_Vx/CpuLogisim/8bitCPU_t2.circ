@@ -775,13 +775,12 @@
       <a name="labelvisible" val="true"/>
     </comp>
     <comp lib="5" loc="(1820,3480)" name="Hex Digit Display">
-      <a name="color" val="#63ff00"/>
+      <a name="color" val="#000000"/>
       <a name="labelvisible" val="true"/>
-      <a name="offcolor" val="#969696"/>
     </comp>
     <comp lib="5" loc="(1860,3480)" name="Hex Digit Display">
-      <a name="color" val="#63ff00"/>
-      <a name="offcolor" val="#969696"/>
+      <a name="color" val="#000000"/>
+      <a name="labelvisible" val="true"/>
     </comp>
     <comp lib="5" loc="(1900,950)" name="Hex Digit Display">
       <a name="color" val="#000000"/>
@@ -1258,7 +1257,9 @@
     <wire from="(2080,2070)" to="(2080,2250)"/>
     <wire from="(2080,2070)" to="(2160,2070)"/>
     <wire from="(2080,2250)" to="(2100,2250)"/>
-    <wire from="(2090,1720)" to="(2090,2230)"/>
+    <wire from="(2090,1720)" to="(2090,1910)"/>
+    <wire from="(2090,1910)" to="(2090,2230)"/>
+    <wire from="(2090,1910)" to="(3040,1910)"/>
     <wire from="(2090,2230)" to="(2100,2230)"/>
     <wire from="(2090,2460)" to="(2090,2490)"/>
     <wire from="(2090,2460)" to="(2170,2460)"/>
@@ -1388,9 +1389,12 @@
     <wire from="(3010,2110)" to="(3010,2150)"/>
     <wire from="(3020,2180)" to="(3020,2210)"/>
     <wire from="(3020,2210)" to="(3210,2210)"/>
+    <wire from="(3040,1910)" to="(3040,2130)"/>
+    <wire from="(3040,2130)" to="(3120,2130)"/>
     <wire from="(3070,2070)" to="(3070,2510)"/>
     <wire from="(3070,2070)" to="(3090,2070)"/>
     <wire from="(3070,2510)" to="(3170,2510)"/>
+    <wire from="(3120,2090)" to="(3120,2130)"/>
     <wire from="(3150,2030)" to="(3230,2030)"/>
     <wire from="(3230,2030)" to="(3230,2200)"/>
     <wire from="(3230,2030)" to="(3330,2030)"/>
