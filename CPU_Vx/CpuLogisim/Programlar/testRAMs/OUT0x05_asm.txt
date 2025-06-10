@@ -1,0 +1,2 @@
+LOAD r4,ff
+OUT r4

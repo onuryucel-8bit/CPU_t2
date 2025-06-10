@@ -1,0 +1,2 @@
+LOAD r5,fa
+NOT r5 ; r5 = 5;

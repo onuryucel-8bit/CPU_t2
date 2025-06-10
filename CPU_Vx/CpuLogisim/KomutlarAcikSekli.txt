@@ -57,9 +57,6 @@ FETCH-YAKALAMA
 }
 
 //CALISIYOR 08.06.25
-
-//bayt3 => rx
-//06
 LOAD 0x01 
 {
 	/*
@@ -95,7 +92,6 @@ LOAD 0x01
 }
 
 //CALISIYOR 08.06.25
-//0b
 LOAD 0x02
 {
 	/*
@@ -208,25 +204,71 @@ MOV 0x04
 	
 }
 
+//CALISIYOR 09.06.25
 OUT 0x05
 {
-	//rx => postaA
-	//rx => outReg	
+	/*
+	200080
+	150000
+	*/
+	//200080
+	table[MDR_out],
+	table[postaA_we],
+
+	rx => postaA
+	
+	//150000
+	table[postaA_out],
+	table[REGFILE_out],
+	table[OUT_we]
+	
+	rx => outReg	
 }
 
+//HATA VAR 1bayt atliyor
 OUT 0x06
 {
-	//adres => adresReg
-	//adres => MAR
-	//RAM => outReg
+	//2000080
+	//adresi al
+	table[MDR_out],
+	table[adrReg_we],
+	
+	adres => adresReg
+	
+	//1000030
+	table[adrReg_out],
+	table[MAR_we],
+	
+	adresReg => MAR
+	
+	//41	
+    table[RAM_out],
+    table[MDR_we],
+	
+	RAM => MDR
+	
+	//40081
+	table[MDR_out],
+	table[RAM_out],
+	table[OUT_we]
+	
+	MDR => outReg
 }
 
+//CALISIYOR ? 09.06.2025
 OR
 XOR
 AND
 SUB 
 ADD 0x08
 {
+	/*
+	a00080
+	a00080
+	110700
+	408800
+	*/
+	
 	//a00080
 	table[MDR_out],
 	table[postaA_we],
@@ -257,25 +299,82 @@ ADD 0x08
 	//ACC => regfile
 }
 
+//CALISIYOR 09.06.2025
 NOT 0x0e
 {
-	//rx => postaA
-	//rx => ALU
-	//ALU => ACC
-	//ACC => regfile
+	
+	/*
+	200080
+	100700
+	108800
+	*/
+	//200080
+	table[MDR_out],
+	table[postaA_we],
+	MDR => postaA
+	
+	rx => postaA
+	
+	//100700	
+	table[postaA_out],
+	table[I3B],
+	table[ACC_we],
+	table[ALUMUX_enb]
+	
+	rx => ALU => ACC
+	
+	//108800	
+	table[postaA_out],
+	table[REGFILE_we],
+	table[ALU_out]
+	
+	ACC => regfile	
 }
 
-SHL
-SHR
+//CALISIYOR 09.06.2025
+SHL 0x0a
+SHR 0x0b
 {
-	//rx => postaA	
-	//ry => postaB
+	//postaB = reg
+	//postaA = sayi
 	
-	//rx => tempReg
-	//ry => ALU.shiftAmount
+	/*
+	a00080
+	411000
+	400700
+	408800
+	*/
 	
-	//ALU => ACC
-	//ACC => regfile
+	//a00080
+	table[MDR_out],
+	table[postaA_we],
+	table[postaB_we],	
+	rx => postaB
+	ry => postaA
+	
+	//411000
+	table[REGFILE_out],
+	table[postaB_out],
+	table[TEMP_we]
+		
+	rx => tempReg
+	
+	//400700
+	table[postaB_out],    
+	table[ALUMUX_enb],
+	table[I3B],
+	table[ACC_we]
+	
+	TEMP => ALU => ACC
+	
+	
+	//408800	
+	table[postaA_out],
+	table[REGFILE_we],
+	table[ALU_out]
+	
+	ACC => regfile	
+	
 }
 
 SUB
@@ -292,18 +391,57 @@ ADD 0x10 ADD rx,0x
 	//ACC => regfile
 }
 
-JMP
+//CALISIYOR 09.06.2025
+JMP 0x20
 {
-	//adres => adresReg
-	//adresReg => PC	
+	/*
+	2000080
+	1000008
+	*/
+	//2000080
+	//adresi al
+	table[MDR_out],
+	table[adrReg_we],	
+	
+	adres => adresReg
+	
+	//1000008
+	table[adrReg_out],
+	table[PC_load],
+	
+	adresReg => PC	
 }
 
-JZ
+//Flags / Bayraklar
+/*
+	0 : ACC < 0
+	1 : ACC == 0
+	2 : ACC > 0
+	3 : subcarry
+	4 : sumcarry
+	//CMP
+	5 : r0 < r1
+	6 : r0 == r1
+	7 : r0 > r1
+
+*/
+
+JZ 0x21
 {
 	if(ACC == 0)
 	{
-		//adres => adresReg
-		//adresReg => PC
+		//2000080
+		//adresi al
+		table[MDR_out],
+		table[adrReg_we],	
+	
+		adres => adresReg
+		
+		//1000008
+		table[adrReg_out],
+		table[PC_load],
+	
+		adresReg => PC	
 	}
 }
 
@@ -350,4 +488,19 @@ JSC
 		//adres => adresReg
 		//adresReg => PC
 	}
+}
+
+JRL
+{
+	//r0 < r1
+}
+
+JRE
+{
+	//r0 == r1
+}
+
+JRG
+{
+	//r0 > r1
 }

@@ -1,0 +1,2 @@
+JMP 0x90 ;jmp => LOAD r3,fa
+LOAD r3,0xfa
