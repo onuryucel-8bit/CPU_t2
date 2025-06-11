@@ -1,0 +1,2 @@
+ADD r0,5 
+ADD r0,2 ;sonuc = 7

@@ -2,6 +2,8 @@
 Toplam: 15 bit
 
 
+2a00000
+
 Sol Kontrol Bitleri - 7
 ========================================
 0 L0:RAM_out						
@@ -33,7 +35,7 @@ Sag Kontrol Bitleri - 6
 15 R7:REGFILE_we
 16 R8:REGFILE_out //regfile => anahat
 
-17 R9:CMP_out
+17 R9:!!BOS!!
 18 R10:OUT_we
 
 19 R11:TEMP_out //TEMP => data bus

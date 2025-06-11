@@ -14,45 +14,43 @@ Durdurma kontrol bitleri 2a00000
 FETCH-YAKALAMA
 {
 	/*
-	24 
-	41 
-	2080 
 	24
-	65
+	41
+	2080
+	41
 	*/
 	
-	//t0 24 | pc => mar; pc++;	
-	PC_enb
+	//24
+	PC_enb,
 	MAR_we
 	
-	//t1 41| ram => mdr
-	//komut => MDR
-	ram_out 
-	mdr_we
+	PC => MAR
+	PC++
 	
+	//41
+	RAM_out,
+	MDR_we
 	
-	//komut => IR
-	//t2 2080| mdr => ir 
-	ir_we 	
-	mdr_out 
+	RAM => MDR
 	
-	//Ikinci bayti al
-	//t3 24 | pc => mar; pc++;
-	pc_enb 
-	mar_we 
+	//2080
+	MDR_out,
+	IR_we
 	
-	//Ucuncu bayt?
-	//komutlarin bircogu 2bayt bu dongude 3.bayt isaret ediliyor
-	//eger komut 3.bayta ihtiyaci yoksa o zaman bu sonraki demektirki
-	//program sayaci sonraki komutu gosteriyor
-	//t4 65		
-	ram_out
-	mdr_we
-	pc_enb
-	mar_we
+	MDR => IR
+		
+	//24
+	PC_enb,	
+	MDR_we
+		
+	PC => MAR
+	PC++	
 	
+	//41
+	MAR_we,
+	RAM_out,
 	
-	
+	RAM => MDR
 	
 }
 
@@ -61,6 +59,7 @@ LOAD 0x01
 {
 	/*
 	200080	
+	24
 	41
 	108080
 	*/
@@ -74,14 +73,25 @@ LOAD 0x01
 	MDR => postaA
 	
 	
-	//41 Ucuncu bayti goster
+	//3. bayti goster
+	//24
+	PC_enb,	
+	MDR_we
+	
+	PC => MAR
+	PC++//sonraki komutu goster
+	
+	//41 3. bayti al
 	ram_out
 	mdr_we
+	
+	RAM => MDR
 	
 	//108080
 	table[MDR_out],
 	table[REGFILE_we],
 	table[postaA_out],
+	
 	MDR => regfile
 	
 	
@@ -96,6 +106,7 @@ LOAD 0x02
 {
 	/*
 		200080
+		24
 		41
 		2000080
 		1000020
@@ -107,9 +118,19 @@ LOAD 0x02
 	table[postaA_we],
 	MDR => postaA
 	
-	//41 Ucuncu bayti goster
+	//3. bayti goster
+	//24
+	PC_enb,	
+	MDR_we
+	
+	PC => MAR
+	PC++//sonraki komutu goster
+	
+	//41 3. bayti al
 	ram_out
 	mdr_we
+	
+	RAM => MDR
 	
 	//2000080
 	//adresi al
@@ -141,6 +162,7 @@ STR 0x03
 {
 	/*
 	200080
+	24
 	41
 	1000030
 	110002
@@ -150,9 +172,19 @@ STR 0x03
 	table[postaA_we],
 	MDR => postaA
 		
-	//41 Ucuncu bayti goster
+	//3. bayti goster
+	//24
+	PC_enb,	
+	MDR_we
+	
+	PC => MAR
+	PC++//sonraki komutu goster
+	
+	//41 3. bayti al
 	ram_out
 	mdr_we
+	
+	RAM => MDR
 	
 	//2000080
 	//adresi al
@@ -225,9 +257,15 @@ OUT 0x05
 	rx => outReg	
 }
 
-//HATA VAR 1bayt atliyor
+//
 OUT 0x06
 {
+	/*
+	2000080
+	1000030
+	41
+	40081
+	*/
 	//2000080
 	//adresi al
 	table[MDR_out],
@@ -383,12 +421,62 @@ OR
 XOR
 ADD 0x10 ADD rx,0x
 {
-	//rx => postaA
-	PC++
-	//rx => tempReg
-	//sayi => aluAraHat
-	//ALU => ACC
-	//ACC => regfile
+	
+	/*
+	200080
+	111000
+	24
+	41
+	4700
+	108800
+	*/
+	
+	//200080
+	table[MDR_out],
+	table[postaA_we],
+	
+	MDR => postaA	
+	//mdr(rx) => postaA
+	
+	
+	//111000
+	postaA_out,
+	REGFILE_out,
+	TEMP_we
+	
+	regfile => tempReg
+	
+	//SAYI => MDR
+	{
+	//3. bayti goster
+	//24
+	PC_enb,	
+	MDR_we
+	
+	PC => MAR
+	PC++//sonraki komutu goster
+	
+	//41 3. bayti al
+	ram_out
+	mdr_we
+	}
+	
+	//4700
+	REGPATH_in,
+	I3B,
+	ALUMUX_enb,
+	ACC_we
+	
+	rx + sayi => ACC
+	
+	//108800
+	ALU_out,
+	REGFILE_we,
+	postaA_out,
+ 
+	ACC => rx
+	
+	
 }
 
 //CALISIYOR 09.06.2025
@@ -418,11 +506,7 @@ JMP 0x20
 	1 : ACC == 0
 	2 : ACC > 0
 	3 : subcarry
-	4 : sumcarry
-	//CMP
-	5 : r0 < r1
-	6 : r0 == r1
-	7 : r0 > r1
+	4 : sumcarry	
 
 */
 
@@ -463,16 +547,7 @@ JGZ
 	}
 }
 
-JNZ
-{
-	if(ACC != 0)
-	{
-		//adres => adresReg
-		//adresReg => PC
-	}
-}
-
-JC
+JSC
 {
 	if(sumCarry == 1)
 	{
@@ -481,26 +556,11 @@ JC
 	}
 }
 
-JSC
+JUC
 {
 	if(subCarry == 1)
 	{
 		//adres => adresReg
 		//adresReg => PC
 	}
-}
-
-JRL
-{
-	//r0 < r1
-}
-
-JRE
-{
-	//r0 == r1
-}
-
-JRG
-{
-	//r0 > r1
 }
