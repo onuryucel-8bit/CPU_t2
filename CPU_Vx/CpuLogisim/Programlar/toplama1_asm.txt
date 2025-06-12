@@ -1,0 +1,6 @@
+LOAD r0,5      ;r0 = 5
+LOAD r1,0	   ;r1 = 0
+LOOP:
+	ADD r1,r0  ;r1 += r2
+	SUB r0,1   ;r0--
+	JGZ LOOP   ;if(ACC > 0) PC = LOOP
