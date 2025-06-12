@@ -55,6 +55,7 @@ private:
 
 	int programCounter = 0;
 	int regs[8];
+	int outReg;
 
 	int rx, ry;
 	int sayi;
@@ -62,15 +63,18 @@ private:
 
 	int ACC = 0;
 
+	void printOutReg();
 	void printRegs();
 	void clearRegs();
 
 	void LOAD0x1();
+	void LOAD0x2();
+	void STR0x3();
 	void MOV0x4();
+	void OUT0x5();
 	void ADD0x8();
 	void SUBs0x11();
 	void JGZ0x23();
-	void LOAD0x2();
 };
 
 

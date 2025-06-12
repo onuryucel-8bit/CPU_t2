@@ -3,6 +3,7 @@
 PatlicanCpuEmu::PatlicanCpuEmu(int* _ram, size_t ramSize)
 {
 	std::copy(_ram, _ram + ramSize, ram);
+	outReg = 0;
 }
 
 PatlicanCpuEmu::~PatlicanCpuEmu()
@@ -16,8 +17,15 @@ void PatlicanCpuEmu::printRegs()
 	{
 		std::cout << "r :" << i << " | " << regs[i] << "\n";
 	}
+
+	std::cout << "-------------Out Reg--------------\n";
+	std::cout << outReg << "\n";
 }
 
+void PatlicanCpuEmu::printOutReg()
+{
+
+}
 
 void PatlicanCpuEmu::clearRegs()
 {
@@ -48,6 +56,11 @@ void PatlicanCpuEmu::run()
 
 		case OPCODE::LOAD:
 			LOAD0x1();
+			programCounter++;
+			break;
+
+		case OPCODE::OUT:
+			OUT0x5();
 			programCounter++;
 			break;
 
@@ -107,6 +120,18 @@ void PatlicanCpuEmu::LOAD0x2()
 	regs[rx] = ram[adres];
 }
 
+void PatlicanCpuEmu::STR0x3()
+{
+	programCounter++;
+	int regByte = ram[programCounter];
+
+	int rx = regByte & 0x07;
+	
+	programCounter++;
+	int adres = ram[programCounter];
+
+	ram[adres] = regs[rx];
+}
 
 void PatlicanCpuEmu::MOV0x4()
 {
@@ -118,6 +143,16 @@ void PatlicanCpuEmu::MOV0x4()
 	ry = opcode & 0x07;
 
 	regs[rx] = regs[ry];
+}
+
+void PatlicanCpuEmu::OUT0x5()
+{
+	programCounter++;
+	int regByte = ram[programCounter];
+
+	int rx = regByte & 0x07;
+
+	outReg = regs[rx];
 }
 
 void PatlicanCpuEmu::ADD0x8()
