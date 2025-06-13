@@ -72,7 +72,13 @@ private:
 	void STR0x3();
 	void MOV0x4();
 	void OUT0x5();
+	void OUT0x6();
+
 	void ADD0x8();
+	void SUB0x9();
+	void SHL0xa();
+	void SHR0xb();
+
 	void SUBs0x11();
 	void JGZ0x23();
 };

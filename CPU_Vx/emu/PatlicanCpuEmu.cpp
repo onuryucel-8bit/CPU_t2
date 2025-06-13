@@ -88,7 +88,9 @@ void PatlicanCpuEmu::run()
 	printRegs();
 }
 
-
+//-----------------------------------------------------------------------------------------------------//
+//---------------------------------OPCODES-------------------------------------------------------------//
+//-----------------------------------------------------------------------------------------------------//
 
 void PatlicanCpuEmu::LOAD0x1()
 {
@@ -155,16 +157,66 @@ void PatlicanCpuEmu::OUT0x5()
 	outReg = regs[rx];
 }
 
+void PatlicanCpuEmu::OUT0x6()
+{
+	programCounter++;
+	int adres = ram[programCounter];
+
+	outReg = ram[adres];
+}
+
 void PatlicanCpuEmu::ADD0x8()
 {
 	programCounter++;
-	opcode = ram[programCounter];
+	int regByte = ram[programCounter];
 
-	rx = opcode & 0x38;
+	int rx = regByte & 0x38;
 	rx >>= 3;
-	ry = opcode & 0x07;
+	int ry = regByte & 0x07;
 
 	regs[rx] = regs[rx] + regs[ry];
+
+	ACC = regs[rx];
+}
+
+void PatlicanCpuEmu::SUB0x9()
+{
+	programCounter++;
+	int regByte = ram[programCounter];
+
+	int rx = regByte & 0x38;
+	rx >>= 3;
+	int ry = regByte & 0x07;
+
+	regs[rx] = regs[rx] - regs[ry];
+
+	ACC = regs[rx];
+}
+
+void PatlicanCpuEmu::SHL0xa()
+{
+	programCounter++;
+	int regByte = ram[programCounter];
+
+	int rx = regByte & 0x38;
+	rx >>= 3;
+	int shiftAmount = regByte & 0x07;
+
+	regs[rx] = regs[rx] << regs[ry];
+
+	ACC = regs[rx];
+}
+
+void PatlicanCpuEmu::SHR0xb()
+{
+	programCounter++;
+	int regByte = ram[programCounter];
+
+	int rx = regByte & 0x38;
+	rx >>= 3;
+	int shiftAmount = regByte & 0x07;
+
+	regs[rx] = regs[rx] >> regs[ry];
 
 	ACC = regs[rx];
 }

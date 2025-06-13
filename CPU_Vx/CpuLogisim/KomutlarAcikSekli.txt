@@ -461,7 +461,7 @@ ADD 0x10 ADD rx,0x
 	mdr_we
 	}
 	
-	//4700
+	//4780
 	REGPATH_in,
 	I3B,
 	ALUMUX_enb,
