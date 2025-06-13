@@ -81,6 +81,16 @@ enum class SymbolTypes
 
 enum class SymbolUsageStatus
 {
+	/*
+	
+	START: //not_used
+	ADD	r1,r2
+	JGZ LOOP: //undefined
+
+	NUMBER = 2
+	LOAD r2,NUMBER // defined
+
+	*/
 	UNDEFINED,   //used but not defined in program(forward declared label/var)
 	DEFINED,     //defined and used in program
 	NOT_USED,    //not used in program

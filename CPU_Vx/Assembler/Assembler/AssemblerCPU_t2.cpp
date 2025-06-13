@@ -64,7 +64,7 @@ void AssemblerCPU_t2::readVariable()
 	}
 	else
 	{
-		m_symbolTable[m_currentToken] = { m_currentRamIndex, decNumber, SymbolTypes::VARIABLE, SymbolUsageStatus::UNDEFINED };
+		m_symbolTable[m_currentToken] = { m_currentRamIndex, decNumber, SymbolTypes::VARIABLE, SymbolUsageStatus::NOT_USED };
 		//m_currentRamIndex--;
 	}
 
@@ -140,7 +140,7 @@ bool AssemblerCPU_t2::firstPass()
 			}
 			else
 			{
-				m_symbolTable[m_currentToken] = { m_currentRamIndex, 0, SymbolTypes::LABEL };
+				m_symbolTable[m_currentToken] = { m_currentRamIndex, 0, SymbolTypes::LABEL, SymbolUsageStatus::NOT_USED};
 				//m_currentRamIndex--;
 			}
 			
