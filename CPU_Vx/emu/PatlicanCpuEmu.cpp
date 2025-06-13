@@ -70,7 +70,7 @@ void PatlicanCpuEmu::run()
 			break;
 
 		case OPCODE::SUBs:
-			SUBs0x11();
+			SUB0x11();
 			programCounter++;
 			break;
 
@@ -221,7 +221,55 @@ void PatlicanCpuEmu::SHR0xb()
 	ACC = regs[rx];
 }
 
-void PatlicanCpuEmu::SUBs0x11()
+void PatlicanCpuEmu::AND0xc()
+{
+}
+
+void PatlicanCpuEmu::OR0xd()
+{
+}
+
+void PatlicanCpuEmu::NOT0xe()
+{
+}
+
+void PatlicanCpuEmu::XOR0xf()
+{
+}
+
+void PatlicanCpuEmu::ADD0x10()
+{
+}
+
+void PatlicanCpuEmu::SUB0x11()
+{
+}
+
+void PatlicanCpuEmu::AND0x14()
+{
+}
+
+void PatlicanCpuEmu::OR0x15()
+{
+}
+
+void PatlicanCpuEmu::XOR0x17()
+{
+}
+
+void PatlicanCpuEmu::JMP0x20()
+{
+}
+
+void PatlicanCpuEmu::JZ0x21()
+{
+}
+
+void PatlicanCpuEmu::JLZ0x22()
+{
+}
+
+void PatlicanCpuEmu::SUB0x11()
 {
 	programCounter++;
 	opcode = ram[programCounter];
@@ -252,4 +300,12 @@ void PatlicanCpuEmu::JGZ0x23()
 		//ziplama komutunu atla
 		programCounter += 2;
 	}
+}
+
+void PatlicanCpuEmu::JSC0x25()
+{
+}
+
+void PatlicanCpuEmu::JUC0x26()
+{
 }

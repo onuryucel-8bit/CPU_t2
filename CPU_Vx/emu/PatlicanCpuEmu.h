@@ -67,6 +67,7 @@ private:
 	void printRegs();
 	void clearRegs();
 
+	//--------------------------//
 	void LOAD0x1();
 	void LOAD0x2();
 	void STR0x3();
@@ -74,13 +75,32 @@ private:
 	void OUT0x5();
 	void OUT0x6();
 
+	//--------------------------//
 	void ADD0x8();
 	void SUB0x9();
 	void SHL0xa();
 	void SHR0xb();
 
-	void SUBs0x11();
+	void AND0xc();
+	void OR0xd();
+	void NOT0xe();
+	void XOR0xf();
+
+	void ADD0x10();
+	void SUB0x11();
+	void AND0x14();
+	void OR0x15();
+	void XOR0x17();
+	//--------------------------//
+
+	void JMP0x20();
+	void JZ0x21();
+	void JLZ0x22();
 	void JGZ0x23();
+	
+	void JSC0x25();
+	void JUC0x26();
+	//--------------------------//
 };
 
 
