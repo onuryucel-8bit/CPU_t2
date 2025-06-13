@@ -17,7 +17,7 @@ public:
 	
 	std::string read(const char* path);	
 
-	void write(const char* path, std::string& data, std::ios::openmode mode);
+	void write(std::string& path, std::string& data, std::ios::openmode mode);
 
 	
 private:

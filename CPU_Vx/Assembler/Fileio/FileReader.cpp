@@ -24,7 +24,7 @@ std::string FileReader::read(const char* path) {
 
 
 
-void FileReader::write(const char* path, std::string& data, std::ios::openmode mode)
+void FileReader::write(std::string& path, std::string& data, std::ios::openmode mode)
 {
 
 	std::ofstream myfile(path, mode);
