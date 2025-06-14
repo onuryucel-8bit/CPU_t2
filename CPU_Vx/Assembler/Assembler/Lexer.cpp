@@ -75,11 +75,18 @@ char Lexer::peek()
 
 		
 	}
-
-	return 0;
 }
 
+void Lexer::reset()
+{
+	m_currentChar = m_program[0];
+	m_position = 0;
+}
 
+int Lexer::getCurrentPosition()
+{
+	return m_position;
+}
 
 
 std::string Lexer::getNextToken()

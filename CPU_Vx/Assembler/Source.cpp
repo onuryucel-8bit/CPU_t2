@@ -250,9 +250,8 @@ int main()
 	std::string file = fr.read("program.txt");
 
 	asmp::AssemblerCPU_t2 assembler(file);
-	assembler.run();
+	std::vector<asmp::RamLayout> output = assembler.run();
 	
-
 	
 
 }

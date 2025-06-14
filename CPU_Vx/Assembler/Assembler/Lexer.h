@@ -11,7 +11,9 @@ public:
 
 	std::string getNextToken();
 	char peek();
+	void reset();
 
+	int getCurrentPosition();
 private:
 	void advance();
 	void skipWhiteSpace();

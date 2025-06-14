@@ -1,5 +1,7 @@
 #include "Radix.h"
 
+//FIXME stoul ve turevlerinin guvenli versiyonunu ekle 13.06.25
+
 namespace rdx {
 
     std::string toBinaryString(size_t dec)

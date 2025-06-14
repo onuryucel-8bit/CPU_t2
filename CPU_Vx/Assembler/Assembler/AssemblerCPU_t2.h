@@ -36,6 +36,7 @@ enum TokenType
 	STR,
 	MOV,
 	JGZ,
+	JMP
 };
 
 struct OpcodeInfo
@@ -75,8 +76,9 @@ struct RamLayout
 
 enum class SymbolTypes
 {
-	LABEL,
-	VARIABLE
+	LABEL,   //LOOP:
+	VARIABLE,//.var 0x4
+	MACRO    //i = 0x5
 };
 
 enum class SymbolUsageStatus
@@ -105,6 +107,7 @@ struct Symbol
 	SymbolTypes m_type;
 	SymbolUsageStatus m_status;
 
+	/*
 	Symbol(int lineNumber, int value, SymbolTypes type, SymbolUsageStatus status)
 	{
 		m_lineNumber = lineNumber;
@@ -112,6 +115,7 @@ struct Symbol
 		m_type = type;
 		m_status = status;
 	}
+	*/
 };
 
 class AssemblerCPU_t2
@@ -120,16 +124,26 @@ public:
 	AssemblerCPU_t2(std::string& program);
 	~AssemblerCPU_t2();
 	
-	void run();
+	std::vector<RamLayout> run();
 
 private:
-	bool firstPass();
+	void firstPass();
 	void secondPass();
 
+#ifdef _DEBUG
+	void printOutput();
+#endif // _DEBUG
+
+	std::string toString(asmp::TokenType type);
+	std::string toString(asmp::SymbolUsageStatus status);
+	std::string toString(asmp::SymbolTypes type);
 
 	void readVariable();
+	
+	//returns error line
+	std::string getErrorLine();
 
-	void printError();
+	void printWarning(std::string message);
 	void printError(std::string message);
 
 	bool removeRRegisterPrefix(std::string& operand);
@@ -168,6 +182,7 @@ private:
 		{"LOAD", OpcodeInfo(TokenType::LOAD, 2, "01")},
 		{"STR" , OpcodeInfo(TokenType::STR , 2, "03")},
 		{"MOV" , OpcodeInfo(TokenType::MOV , 1, "04")},
+		{"JMP" , OpcodeInfo(TokenType::JMP , 0, "FF")},
 		{"JGZ" , OpcodeInfo(TokenType::JGZ , 2, "05")},
 	};
 
