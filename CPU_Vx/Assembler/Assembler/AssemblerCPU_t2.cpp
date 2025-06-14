@@ -257,7 +257,7 @@ void AssemblerCPU_t2::firstPass()
 			break;
 		}
 
-		TokenType currentType = m_translateTable[m_currentToken].m_type;
+		TokenType currentType = m_commandInfoTable[m_currentToken].m_type;
 		//std::cout << m_currentToken << "\n";
 
 		//Eger currentToken etiket/label ise
@@ -389,7 +389,7 @@ void AssemblerCPU_t2::firstPass()
 	//	}
 
 
-	//	TokenType currentType = m_translateTable[m_currentToken].m_type;
+	//	TokenType currentType = m_commandInfoTable[m_currentToken].m_type;
 	//	
 	//	//Eger currentToken etiket/label ise
 	//	if (m_currentToken[m_currentToken.length() - 1] == ':')
@@ -508,6 +508,9 @@ void AssemblerCPU_t2::secondPass()
 {
 	//dosyanin basina geri don
 	lexer.reset();
+	m_currentRamIndex = 0;
+	m_lineNumber = 0;
+
 	while (m_error == false)
 	{
 		std::string rx, ry, secondByte;
@@ -520,7 +523,7 @@ void AssemblerCPU_t2::secondPass()
 			break;
 		}
 
-		TokenType currentType = m_translateTable[m_currentToken].m_type;
+		TokenType currentType = m_commandInfoTable[m_currentToken].m_type;
 
 		RamLayout memLayout;
 
@@ -556,20 +559,33 @@ void AssemblerCPU_t2::secondPass()
 				break;
 			}
 
-			memLayout.m_package.rx = std::stoi(rx);
-			memLayout.m_package.ry = std::stoi(ry);
+			memLayout.m_ramIndex = m_currentRamIndex;
+			memLayout.m_package.partx = std::stoi(rx);
+			memLayout.m_package.party = std::stoi(ry);
 			memLayout.m_type = asmp::TokenType::ADD;
 
 			m_output.push_back(memLayout);
+//TODO check if this code duplicated in switch after project
+			m_currentRamIndex += m_commandInfoTable[m_currentToken].m_byteAmount;
 			break;
 
 		case SUB:
 			rx = lexer.getNextToken();
 			secondByte = lexer.getNextToken();
 
+			if (!removeRRegisterPrefix(rx) || !removeHexPrefix(secondByte))
+			{
+				m_error = true;
+			}
 
+			memLayout.m_ramIndex = m_currentRamIndex;
+			memLayout.m_package.partx = std::stoi(rx);
+			memLayout.m_package.party = std::stoi(secondByte);
 			memLayout.m_type = asmp::TokenType::SUB;
+
 			m_output.push_back(memLayout);
+
+			m_currentRamIndex += m_commandInfoTable[m_currentToken].m_byteAmount;
 			break;
 
 		case SHL:
@@ -596,11 +612,14 @@ void AssemblerCPU_t2::secondPass()
 				break;
 			}
 
-			memLayout.m_package.rx = std::stoi(rx);
-			memLayout.m_package.byte = std::stoi(secondByte);
+			memLayout.m_ramIndex = m_currentRamIndex;
+			memLayout.m_package.partx = std::stoi(rx);
+			memLayout.m_package.party = std::stoi(secondByte);
 			memLayout.m_type = asmp::TokenType::LOAD;
 
 			m_output.push_back(memLayout);
+
+			m_currentRamIndex += m_commandInfoTable[m_currentToken].m_byteAmount;
 			break;
 
 		case STR:
@@ -612,9 +631,12 @@ void AssemblerCPU_t2::secondPass()
 			secondByte = lexer.getNextToken();//label
 			adres = m_symbolTable[secondByte].m_lineNumber;
 
-			memLayout.m_package.byte = adres;
+			memLayout.m_ramIndex = m_currentRamIndex;
+			memLayout.m_package.partx = adres;
 			memLayout.m_type = asmp::TokenType::JGZ;
 			m_output.push_back(memLayout);
+
+			m_currentRamIndex += m_commandInfoTable[m_currentToken].m_byteAmount;
 			break;
 
 		case JMP:
@@ -622,6 +644,8 @@ void AssemblerCPU_t2::secondPass()
 		default:
 			break;
 		}
+
+		m_lineNumber++;
 	}
 	
 }
@@ -632,7 +656,10 @@ void AssemblerCPU_t2::printOutput()
 	std::cout << rang::bg::green <<"Printing results..." << rang::style::reset << "\n";
 	for (size_t i = 0; i < m_output.size(); i++)
 	{
-		std::cout << toString(m_output[i].m_type) << "\n";
+		std::cout << toString(m_output[i].m_type)
+			<< " " << m_output[i].m_package.partx
+			<< " " << m_output[i].m_package.party
+			<< "\n";
 	}
 }
 #endif // _DEBUG

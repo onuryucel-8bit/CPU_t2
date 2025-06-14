@@ -18,25 +18,44 @@ namespace asmp
 
 enum TokenType
 {
-	EMPTY,
-	ORIGIN,
-	LABEL,
-	HLT,
-	ADD,
-	SUB,
-	SHL,
-	SHR,
+	EMPTY = -3,
+	ORIGIN = -2,
+	LABEL = -1,
 
-	AND,
-	OR,
-	NOT,
-	XOR,
+	HLT = 0x0,
 
-	LOAD,
-	STR,
-	MOV,
-	JGZ,
-	JMP
+	LOAD = 0x01,
+	LOADs = 0x02,
+	STR = 0x03,
+	MOV = 0x04,
+
+	OUTr = 0x05,
+	OUTa = 0x06,
+
+
+	ADD = 0x8,
+	SUB = 0x9,
+	SHL = 0xa,
+	SHR = 0xb,
+
+	AND = 0x0c,
+	OR  = 0x0d,
+	NOT = 0x0e,
+	XOR = 0x0f,
+
+	ADDs = 0x10,
+	SUBs = 0x11,
+	ANDs = 0x14,
+	ORs = 0x15,
+	XORs = 0x17,
+	
+	JMP = 0x20,
+	JZ = 0x21,
+	JLZ = 0x22,
+	JGZ = 0x23,
+
+	JSC = 0x25,
+	JUC = 0x26
 };
 
 struct OpcodeInfo
@@ -62,16 +81,15 @@ struct OpcodeInfo
 
 struct operandPackage
 {
-	int rx;
-	int ry;
-	int byte;
+	int partx = -1;
+	int party = -1;	
 };
 
 struct RamLayout
 {
-	size_t m_ramIndex;
-	operandPackage m_package;
-	TokenType m_type;
+	size_t m_ramIndex = 0;
+	asmp::operandPackage m_package;
+	asmp::TokenType m_type = asmp::TokenType::EMPTY;
 };
 
 enum class SymbolTypes
@@ -137,7 +155,7 @@ private:
 	std::string toString(asmp::TokenType type);
 	std::string toString(asmp::SymbolUsageStatus status);
 	std::string toString(asmp::SymbolTypes type);
-
+	
 	void readVariable();
 	
 	//returns error line
@@ -166,11 +184,11 @@ private:
 	//LOOP => (4, LABEL)
 	std::unordered_map<std::string, Symbol> m_symbolTable;
 
-	std::unordered_map<std::string, OpcodeInfo> m_translateTable =
+	std::unordered_map<std::string, OpcodeInfo> m_commandInfoTable =
 	{
 		{".ORIGIN", OpcodeInfo(TokenType::ORIGIN , 1, "")},
-		{"ADD" , OpcodeInfo(TokenType::ADD , 1, "08")},
-		{"SUB" , OpcodeInfo(TokenType::SUB , 1, "09")},
+		{"ADD" , OpcodeInfo(TokenType::ADD , 2, "08")},
+		{"SUB" , OpcodeInfo(TokenType::SUB , 2, "09")},
 		{"SHL" , OpcodeInfo(TokenType::SHL , 1, "0A")},
 		{"SHR" , OpcodeInfo(TokenType::SHR , 1, "0B")},
 

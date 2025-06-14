@@ -240,9 +240,7 @@
 
 #include "Assembler/AssemblerCPU_t2.h"
 #include "Fileio/FileReader.h"
-
-
-
+#include "LogisimRamPrinter.h"
 
 int main()
 {
@@ -252,6 +250,7 @@ int main()
 	asmp::AssemblerCPU_t2 assembler(file);
 	std::vector<asmp::RamLayout> output = assembler.run();
 	
-	
+	LogisimRamPrinter printer;
+	printer.run(output);
 
 }
