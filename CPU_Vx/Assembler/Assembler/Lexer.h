@@ -10,7 +10,7 @@ public:
 	~Lexer();
 
 	std::string getNextToken();
-	char peek();
+	char checkNextCharIsEqual();
 	void reset();
 
 	int getCurrentPosition();

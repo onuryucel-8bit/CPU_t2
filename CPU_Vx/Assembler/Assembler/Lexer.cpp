@@ -51,7 +51,7 @@ void Lexer::skipComments()
 	}
 }
 
-char Lexer::peek()
+char Lexer::checkNextCharIsEqual()
 {
 	char tempChar = m_currentChar;
 	int tempPos = m_position;

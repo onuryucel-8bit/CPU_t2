@@ -248,8 +248,10 @@ int main()
 	std::string file = fr.read("program.txt");
 
 	asmp::AssemblerCPU_t2 assembler(file);
-	std::vector<asmp::RamLayout> output = assembler.run();
+	std::vector<int> output = assembler.run();
 	
+	 
+
 	LogisimRamPrinter printer;
 	printer.run(output);
 

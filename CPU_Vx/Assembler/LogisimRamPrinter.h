@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "Assembler/AssemblerCPU_t2.h"
+#include "utils/Radix.h"
 
 class LogisimRamPrinter
 {
@@ -12,8 +12,9 @@ public:
 	LogisimRamPrinter();
 	~LogisimRamPrinter();
 
-	void run(std::vector<asmp::RamLayout>& ramLayout);
+	void run(std::vector<int>& ramLayout);
 
+	
 private:
-
+	
 };

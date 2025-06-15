@@ -62,20 +62,20 @@ struct OpcodeInfo
 {
 	TokenType m_type;
 	int m_byteAmount;
-	std::string m_hexValue;
+	//std::string m_hexValue;
 
 	OpcodeInfo()
 	{
 		m_byteAmount = 0;
 		m_type = EMPTY;
-		m_hexValue = "";
+		//m_hexValue = "";
 	}
 
-	OpcodeInfo(TokenType type, int byteAmount, std::string hexValue)
+	OpcodeInfo(TokenType type, int byteAmount)
 	{
 		m_type = type;
 		m_byteAmount = byteAmount;
-		m_hexValue = hexValue;
+		//m_hexValue = hexValue;
 	}
 };
 
@@ -86,10 +86,11 @@ struct operandPackage
 };
 
 struct RamLayout
-{
+{	
 	size_t m_ramIndex = 0;
 	asmp::operandPackage m_package;
 	asmp::TokenType m_type = asmp::TokenType::EMPTY;
+	char m_byteAmount = 2;
 };
 
 enum class SymbolTypes
@@ -142,9 +143,10 @@ public:
 	AssemblerCPU_t2(std::string& program);
 	~AssemblerCPU_t2();
 	
-	std::vector<RamLayout> run();
+	std::vector<int> run();
 
 private:
+	std::vector<int> generateOutput();
 	void firstPass();
 	void secondPass();
 
@@ -152,12 +154,40 @@ private:
 	void printOutput();
 #endif // _DEBUG
 
+	
+
 	std::string toString(asmp::TokenType type);
 	std::string toString(asmp::SymbolUsageStatus status);
 	std::string toString(asmp::SymbolTypes type);
 	
 	void readVariable();
-	
+
+//FIXME ? printer tabloya ihtiyaci var ?
+//TODO std::string hexVal kismi gereklimi?  
+	std::unordered_map<std::string, OpcodeInfo> m_commandInfoTable =
+	{
+		{".ORIGIN", OpcodeInfo(TokenType::ORIGIN , 1)},// "")},
+		{"ADD" , OpcodeInfo(TokenType::ADD ,  2)}, //"08") },
+		{"SUB" , OpcodeInfo(TokenType::SUB ,  2)}, //"09")},
+		{"SUBs", OpcodeInfo(TokenType::SUBs,  3)}, //"11")},
+		{"SHL" , OpcodeInfo(TokenType::SHL ,  2)},// "0A")
+
+
+		{"SHR" , OpcodeInfo(TokenType::SHR ,  2)},// "0B")
+
+
+		{"AND" , OpcodeInfo(TokenType::AND , 2)},// "0C")},
+		{"OR"  , OpcodeInfo(TokenType::OR  , 2)},// "0D")},
+		{"NOT" , OpcodeInfo(TokenType::NOT , 2)},// "0E")},
+		{"XOR" , OpcodeInfo(TokenType::XOR , 2)},// "0F")},
+											  
+		{"LOAD", OpcodeInfo(TokenType::LOAD, 3)},// "01")},
+		{"STR" , OpcodeInfo(TokenType::STR , 2)},// "03")},
+		{"MOV" , OpcodeInfo(TokenType::MOV , 2)},// "04")},
+		{"JMP" , OpcodeInfo(TokenType::JMP , 2)},// "FF")},
+		{"JGZ" , OpcodeInfo(TokenType::JGZ , 2)},// "05")},
+	};
+
 	//returns error line
 	std::string getErrorLine();
 
@@ -167,6 +197,7 @@ private:
 	bool removeRRegisterPrefix(std::string& operand);
 	bool removeHexPrefix(std::string& operand);
 	
+	bool isRegister(std::string& operand);
 
 	Lexer lexer;
 
@@ -178,31 +209,13 @@ private:
 	std::string m_program;
 	std::string m_currentToken;
 
-	std::vector<RamLayout> m_output;
+	std::vector<RamLayout> m_memoryMap;
 
 	//symbol name => symbol line number and type
 	//LOOP => (4, LABEL)
 	std::unordered_map<std::string, Symbol> m_symbolTable;
 
-	std::unordered_map<std::string, OpcodeInfo> m_commandInfoTable =
-	{
-		{".ORIGIN", OpcodeInfo(TokenType::ORIGIN , 1, "")},
-		{"ADD" , OpcodeInfo(TokenType::ADD , 2, "08")},
-		{"SUB" , OpcodeInfo(TokenType::SUB , 2, "09")},
-		{"SHL" , OpcodeInfo(TokenType::SHL , 1, "0A")},
-		{"SHR" , OpcodeInfo(TokenType::SHR , 1, "0B")},
 
-		{"AND" , OpcodeInfo(TokenType::AND , 1, "0C")},
-		{"OR"  , OpcodeInfo(TokenType::OR  , 1, "0D")},
-		{"NOT" , OpcodeInfo(TokenType::NOT , 1, "0E")},
-		{"XOR" , OpcodeInfo(TokenType::XOR , 1, "0F")},
-
-		{"LOAD", OpcodeInfo(TokenType::LOAD, 2, "01")},
-		{"STR" , OpcodeInfo(TokenType::STR , 2, "03")},
-		{"MOV" , OpcodeInfo(TokenType::MOV , 1, "04")},
-		{"JMP" , OpcodeInfo(TokenType::JMP , 0, "FF")},
-		{"JGZ" , OpcodeInfo(TokenType::JGZ , 2, "05")},
-	};
 
 #ifdef _DEBUG
 	std::unordered_map<SymbolTypes, std::string> m_symbolNameTable =

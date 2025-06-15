@@ -79,6 +79,7 @@ void AssemblerCPU_t2::printWarning(std::string message)
 //================================UTILS===============================================//
 //------------------------------------------------------------------------------------//
 
+
 std::string AssemblerCPU_t2::toString(asmp::TokenType type)
 {
 	switch (type)
@@ -92,7 +93,10 @@ std::string AssemblerCPU_t2::toString(asmp::TokenType type)
 	case asmp::HLT:
 		break;
 	case asmp::ADD: return "ADD";
+
+	case asmp::SUBs: return "SUBs";
 	case asmp::SUB: return "SUB";
+	
 	case asmp::SHL:
 		break;
 	case asmp::SHR:
@@ -113,7 +117,7 @@ std::string AssemblerCPU_t2::toString(asmp::TokenType type)
 	case asmp::JGZ: return "JGZ";
 	case asmp::JMP:
 		break;
-	default: return "?default";
+	default: return "?default toString(TokenType)";
 	}
 }
 
@@ -160,9 +164,15 @@ bool AssemblerCPU_t2::removeHexPrefix(std::string& operand)
 	return false;
 }
 
+bool AssemblerCPU_t2::isRegister(std::string& operand)
+{
+	return operand.length() == 2 && std::isdigit(operand[1]) && (operand[0] == 'r' || operand[0] == 'R');
+}
+
 bool AssemblerCPU_t2::removeRRegisterPrefix(std::string& operand)
 {
-	if (operand[0] == 'r' || operand[0] == 'R')
+
+	if (isRegister(operand))
 	{
 		operand.erase(operand.begin());
 		return true;
@@ -215,7 +225,7 @@ void AssemblerCPU_t2::readVariable()
 //------------------------------------------------------------------------------------//
 
 
-std::vector<RamLayout> AssemblerCPU_t2::run()
+std::vector<int> AssemblerCPU_t2::run()
 {
 	std::cout << rang::bg::blue << "Running first pass...\n" << rang::style::reset;
 
@@ -223,21 +233,63 @@ std::vector<RamLayout> AssemblerCPU_t2::run()
 
 	if (m_error == true)
 	{
-		return std::vector<RamLayout>{};
+		return std::vector<int>{};
 	}
 
 	std::cout << rang::bg::blue << "Running second pass...\n" << rang::style::reset;
 	secondPass();
 	if (m_error == true)
 	{
-		return std::vector<RamLayout>{};
+		return std::vector<int>{};
 	}
 
 #ifdef _DEBUG
 	printOutput();
 #endif // _DEBUG
 
-	return m_output;
+	return generateOutput();
+	//return std::vector<int> {};
+}
+
+
+
+std::vector<int> AssemblerCPU_t2::generateOutput()
+{
+	std::vector<int> output(256,0);
+
+	for (size_t i = 0; i < m_memoryMap.size(); i++)
+	{
+		std::cout << m_memoryMap[i].m_type
+			<< " " << std::hex << m_memoryMap[i].m_package.partx
+			<< " " << m_memoryMap[i].m_package.party
+			<< " " << m_memoryMap[i].m_ramIndex
+			<< "\n";
+
+		//push first byte [opcode part]
+		int index = m_memoryMap[i].m_ramIndex;
+		
+		output[index] = m_memoryMap[i].m_type;
+		
+		//push operand part
+		//2.byte
+		if (m_memoryMap[i].m_byteAmount == 2)
+		{
+			index++;
+			output[index] = m_memoryMap[i].m_package.partx;
+		}
+		//3.byte LOAD,STR 3bayt commands
+		else
+		{
+			index++;
+			output[index] = m_memoryMap[i].m_package.partx;
+			index++;
+			output[index] = m_memoryMap[i].m_package.party;
+		}
+		
+
+	}
+
+	return output;
 }
 
 void AssemblerCPU_t2::firstPass()
@@ -281,7 +333,7 @@ void AssemblerCPU_t2::firstPass()
 			
 		}
 		//Degisken tanimi
-		else if (lexer.peek() == '=')
+		else if (lexer.checkNextCharIsEqual() == '=')
 		{
 			readVariable();
 		}
@@ -499,7 +551,7 @@ void AssemblerCPU_t2::firstPass()
 	//		memLayout.m_package.byte = std::stoi(rx);
 	//		break;
 	//	}
-	//	m_output.push_back(memLayout);
+	//	m_memoryMap.push_back(memLayout);
 	//	m_lineNumber++;
 	//}
 }
@@ -531,7 +583,7 @@ void AssemblerCPU_t2::secondPass()
 		{
 		case asmp::EMPTY:
 			//if currentoken not a label,macro and variable then invalid token
-			if (lexer.peek() == '=')
+			if (lexer.checkNextCharIsEqual() == '=')
 			{
 				lexer.getNextToken();//skip '='
 				lexer.getNextToken();//skip number
@@ -558,34 +610,105 @@ void AssemblerCPU_t2::secondPass()
 				m_error = true;
 				break;
 			}
-
-			memLayout.m_ramIndex = m_currentRamIndex;
+			//rx,ry
+			//00(00_0)(000)
 			memLayout.m_package.partx = std::stoi(rx);
 			memLayout.m_package.party = std::stoi(ry);
-			memLayout.m_type = asmp::TokenType::ADD;
 
-			m_output.push_back(memLayout);
+			memLayout.m_package.partx <<= 3;
+			memLayout.m_package.partx |= memLayout.m_package.party;
+
+			memLayout.m_ramIndex = m_currentRamIndex;			
+			memLayout.m_type = asmp::TokenType::ADD;
+			memLayout.m_byteAmount = 2;
+
+			m_memoryMap.push_back(memLayout);
 //TODO check if this code duplicated in switch after project
 			m_currentRamIndex += m_commandInfoTable[m_currentToken].m_byteAmount;
 			break;
-
+//TODO make it more dynamic
 		case SUB:
-			rx = lexer.getNextToken();
+			rx = lexer.getNextToken();			
 			secondByte = lexer.getNextToken();
-
-			if (!removeRRegisterPrefix(rx) || !removeHexPrefix(secondByte))
+			
+			if (!removeRRegisterPrefix(rx))
 			{
 				m_error = true;
+				break;
+			}
+//FIXME code is repeating here
+
+			//Which SUB? 0x09 or 0x11
+
+			//check for 0x09
+			if (isRegister(secondByte))
+			{
+				if (!removeRRegisterPrefix(secondByte))
+				{
+					m_error = true;
+					break;
+				}
+//TODO Combine rx + secondbyte => one byte
+				memLayout.m_type = asmp::TokenType::SUB;
+				memLayout.m_ramIndex = m_currentRamIndex;
+				memLayout.m_package.partx = std::stoi(rx);
+				memLayout.m_package.party = std::stoi(secondByte);
+				memLayout.m_byteAmount = 2;
+
+				m_currentRamIndex += 2;
+				m_memoryMap.push_back(memLayout);
+			}
+			//check for 0x11
+			else
+			{
+				if (!removeHexPrefix(secondByte))
+				{
+					m_error = true;
+					break;
+				}
+				memLayout.m_type = asmp::TokenType::SUBs;
+				memLayout.m_ramIndex = m_currentRamIndex;
+				memLayout.m_package.partx = std::stoi(rx);
+				memLayout.m_package.party = std::stoi(secondByte);
+				memLayout.m_byteAmount = 3;
+
+				m_currentRamIndex += 3;
+				m_memoryMap.push_back(memLayout);
 			}
 
-			memLayout.m_ramIndex = m_currentRamIndex;
-			memLayout.m_package.partx = std::stoi(rx);
-			memLayout.m_package.party = std::stoi(secondByte);
-			memLayout.m_type = asmp::TokenType::SUB;
+			/*if (secondByte[0] == 'r')
+			{
+				|| !removeRRegisterPrefix(secondByte))
+				
+				
+				
+				
+				memLayout.m_type = asmp::TokenType::SUB;
+				m_currentRamIndex += m_commandInfoTable[toString(currentType)].m_byteAmount;
+			}
+			else if(secondByte[0] == '0')
+			{
+				if (!removeRRegisterPrefix(rx) || !removeHexPrefix(secondByte))
+				{
+					m_error = true;
+					break;
+				}
+				std::cout << rang::bg::magenta << "second byte is 0"
+					<< rang::style::reset << "\n";
 
-			m_output.push_back(memLayout);
+				memLayout.m_type = asmp::TokenType::SUBs;
+				m_currentRamIndex += m_commandInfoTable[toString(asmp::TokenType::SUBs)].m_byteAmount;
+				m_currentRamIndex += 3;
+			}*/
 
-			m_currentRamIndex += m_commandInfoTable[m_currentToken].m_byteAmount;
+			
+
+			
+			
+
+			
+
+			
 			break;
 
 		case SHL:
@@ -616,8 +739,9 @@ void AssemblerCPU_t2::secondPass()
 			memLayout.m_package.partx = std::stoi(rx);
 			memLayout.m_package.party = std::stoi(secondByte);
 			memLayout.m_type = asmp::TokenType::LOAD;
+			memLayout.m_byteAmount = 3;
 
-			m_output.push_back(memLayout);
+			m_memoryMap.push_back(memLayout);
 
 			m_currentRamIndex += m_commandInfoTable[m_currentToken].m_byteAmount;
 			break;
@@ -634,7 +758,7 @@ void AssemblerCPU_t2::secondPass()
 			memLayout.m_ramIndex = m_currentRamIndex;
 			memLayout.m_package.partx = adres;
 			memLayout.m_type = asmp::TokenType::JGZ;
-			m_output.push_back(memLayout);
+			m_memoryMap.push_back(memLayout);
 
 			m_currentRamIndex += m_commandInfoTable[m_currentToken].m_byteAmount;
 			break;
@@ -654,15 +778,18 @@ void AssemblerCPU_t2::secondPass()
 void AssemblerCPU_t2::printOutput()
 {
 	std::cout << rang::bg::green <<"Printing results..." << rang::style::reset << "\n";
-	for (size_t i = 0; i < m_output.size(); i++)
+	for (size_t i = 0; i < m_memoryMap.size(); i++)
 	{
-		std::cout << toString(m_output[i].m_type)
-			<< " " << m_output[i].m_package.partx
-			<< " " << m_output[i].m_package.party
-			<< "\n";
+//FIXME toString() ?
+		std::cout //<< toString(m_memoryMap[i].m_type)
+			<< std::hex << m_memoryMap[i].m_type
+			<< " " << m_memoryMap[i].m_package.partx
+			<< " " << m_memoryMap[i].m_package.party
+			<< std::dec << "\n";
 	}
 }
 #endif // _DEBUG
+
 
 
 
