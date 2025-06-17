@@ -89,6 +89,7 @@ struct RamLayout
 {	
 	size_t m_ramIndex = 0;
 	asmp::operandPackage m_package;
+	//TODO type gercekten gerekli mi opcode kismini package icerisine gomulebilir 
 	asmp::TokenType m_type = asmp::TokenType::EMPTY;
 	char m_byteAmount = 2;
 };
