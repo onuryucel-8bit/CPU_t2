@@ -1,0 +1,9 @@
+https://stackoverflow.com/questions/1317256/z80-asm-bnf-structure-am-i-on-the-right-track
+https://bnfplayground.pauliankline.com
+
+<program> ::= <opcode> (<adres> | <register>) (<register> | <sayi> | <adres>)*
+<opcode> ::= "LOAD" | "STR" | "ADD"
+<adres> ::= "@" <sayi>
+<hex> ::= 0x<sayi>
+<register> ::= "R" <sayi>
+<sayi> ::= [0-9]
