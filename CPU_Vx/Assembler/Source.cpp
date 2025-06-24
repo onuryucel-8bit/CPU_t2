@@ -13,8 +13,8 @@
 
 #include "Fileio/FileReader.h"
 
-#include "AssemblerV3/AsmLexer.h"
-#include "AssemblerV3/AsmParser.h"
+#include "AssemblerV3/Lexer.h"
+#include "AssemblerV3/Parser.h"
 
 //asmc asm compiler
 void run()
@@ -30,7 +30,6 @@ void run()
 int main()
 {
 	
-
 	run();
 
 	//asmp::AssemblerCPU_t2 assembler(file);
@@ -42,13 +41,60 @@ int main()
 	//printer.run(output);
 }
 
+//tekrar eden fonksiyonlari birlestir
+//hex sayilari kombinle
+//TODO m_lineNumber nokta atisi hatanin oldugu satiri gostersin
 
-/*
+
+/*V0.2
+<program> ::= <statement>
+<statement> ::= <opcode> ((<register> | <address>) | (<register> | <address> | <hex>)?)
+<opcode> ::= "LOAD" | "ADD" | "STR" | "JMP" | ....
+<hex> ::= 0x[0-f]+
+<address> ::= @[0-f]+
+<register> ::= r[0-f]
+*/
+
+
+/*V0.1
 <program> ::= <statement>
 <statement> ::= <opcode> <register>
 
 <opcode> ::= "LOAD" | "ADD"
 <register> ::= "r" <hex1>
 <hex1> ::= [0-9]
+*/
+
+
+/*
+
+
+!hatali yazim
+LOOP:
+START
+
+!LEXER HATASI hatali yazim sekli ':' yok 
+start
+JGZ start
+
+#uyari verir(kullanilmayan ziplama adresi)
+START:
+LOOP:
+JGZ LOOP
+
+!Hata verir (tanimsiz ziplama adresi) LabelStatus::Undefined
+JGZ LOOP
+
+(birden cok ayni isimde zimplama adresi tanimlanmasi)
+!Hata verir
+LOOP:
+JGZ LOOP
+LOOP:
+
+!Hata verir
+LOOP:
+LOOP:
+JGZ LOOP
 
 */
+

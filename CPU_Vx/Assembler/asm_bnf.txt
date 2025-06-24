@@ -1,0 +1,28 @@
+//opcode kismi ornegin <add> ve <sub> tekrar ediyor bunlari bir fonksiyon altinda birlestirilebilir
+
+//type => opcode hex karsiligi LOAD rx,0xff => (0x1)(rx)(0xff) [0x1] kismi
+void TEST_parseCodeALU(opcode type)
+{
+}
+
+<program> ::= <statement>
+<statement> ::= <opcode> | <label>
+<opcode> ::= <load> | <add> | <str> | <sub> | <jgz> 
+
+<load> ::= <register>,(<hex> | <address>)
+<add> ::= <register>,(<register> | <hex>)
+<sub> ::= <register>,(<register> | <hex>)
+
+//bunlar haric gerisinde tekrar var
+<not> ::= <register>
+<out> ::= (<register> | <address>)
+<str> ::= <address> <register>
+<shl> ::= <register> <4bitHex>
+<jgz> ::= <label>
+
+<hex> ::= "0x"[0-9a-f]
+<address> ::= "@"[0-9a-f]
+<register> ::= "r"[0-f]
+<label> ::= [a-zA-Z] ":"
+
+

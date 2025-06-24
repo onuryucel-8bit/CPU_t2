@@ -43,10 +43,8 @@ void Parser::statement()
 	{
 	case asmc::TokenType::LOAD:
 		nextToken();
-		if (!checkToken(TokenType::REGISTER))
+		if (!expect(asmc::TokenType::REGISTER))
 		{
-			std::cout << "ERROR expected register found\n";
-			errorFlagParser = true;
 			return;
 		}
 
@@ -89,6 +87,20 @@ void Parser::statement()
 
 void Parser::printError(std::string message)
 {
+
+}
+
+bool Parser::expect(asmc::TokenType expectedIdent)
+{
+	if (!checkToken(expectedIdent))
+	{
+		std::cout << "ERROR expected["<< magic_enum::enum_name(expectedIdent)<<"]\n";
+		errorFlagParser = true;
+		return false;
+	}
+	
+	return true;
+
 
 }
 

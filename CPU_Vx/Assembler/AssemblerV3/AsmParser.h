@@ -22,6 +22,7 @@ public:
 	//parser
 	void program();
 
+
 private:	
 
 	bool checkToken(asmc::TokenType type);
@@ -31,6 +32,8 @@ private:
 	void statement();
 
 	void printError(std::string message);
+
+	bool expect(asmc::TokenType expectedIdent);
 
 	bool errorFlagParser;
 
