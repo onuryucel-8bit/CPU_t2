@@ -14,6 +14,15 @@ Parser::Parser(asmc::Lexer* lexer)
 	m_peekToken = m_lexer->getToken();
 	nextToken();
 
+	//{reg-reg,reg-hex}
+	m_variantTable[asmc::TokenType::ADD] = { 0x08,0x10 };
+	m_variantTable[asmc::TokenType::SUB] = { 0x09,0x11 };
+	m_variantTable[asmc::TokenType::AND] = { 0x0c,0x14 };
+	m_variantTable[asmc::TokenType::OR] =  { 0x0D,0x15 };
+	m_variantTable[asmc::TokenType::XOR] = { 0x0F,0x17 };
+	m_variantTable[asmc::TokenType::SHL] = { 0x0A,0x10 };
+	m_variantTable[asmc::TokenType::SHR] = { 0x0B,0x10 };
+
 }
 
 void Parser::secondPass()
@@ -31,8 +40,7 @@ void Parser::secondPass()
 		else if (value.m_status == LabelStatus::NotUsed)
 		{
 			//printWarning("Not used label[" + key + "]");
-
-
+		
 			//check jump table if label used
 			for (const auto& [labelName, memLayout] : m_jumpTable)
 			{
@@ -41,9 +49,16 @@ void Parser::secondPass()
 					//combine label address with jmp instructions
 					std::cout << "ramIndex " << value.m_ramIndex << "\n";
 					m_jumpTable[labelName].m_firstByte = value.m_ramIndex;
+					m_symbolTable[key].m_status = LabelStatus::Used;
 
 					m_output.push_back(m_jumpTable[labelName]);
 				}
+			}
+
+			//for warning
+			if (value.m_status == LabelStatus::NotUsed)
+			{
+				printWarning("Label not used[" + key + "]");
 			}
 		}
 	}
@@ -133,9 +148,14 @@ void Parser::statement()
 		parseSUB();		
 		break;
 
-	case asmc::TokenType::JGZ:		
+	case asmc::TokenType::JMP:
+	case asmc::TokenType::JZ:
+	case asmc::TokenType::JLZ:
+	case asmc::TokenType::JGZ:
+	case asmc::TokenType::JSC:
+	case asmc::TokenType::JUC:		
 		m_lineNumber--;
-		parseJGZ();		
+		parseJumpCommands();
 		break;
 
 	case asmc::TokenType::STR:
@@ -235,6 +255,19 @@ void Parser::printOutput()
 //------------------------------------------------------------------------//
 //------------------------------------------------------------------------//
 
+void Parser::createMemoryLayout(int byteAmount, int opcode)
+{
+	MemoryLayout ml;
+	ml.m_byteAmount = byteAmount;
+	ml.m_ramIndex = m_ramLocation;
+	ml.m_opcode = opcode;
+	ml.m_firstByte = rdx::hexToDeC(m_currentToken.m_text);
+	ml.m_secondByte = rdx::hexToDeC(m_peekToken.m_text);
+
+	m_output.push_back(ml);
+
+	m_ramLocation += byteAmount;
+}
 
 bool Parser::expect(asmc::Token token, asmc::TokenType expectedIdent)
 {
@@ -249,10 +282,77 @@ bool Parser::expect(asmc::Token token, asmc::TokenType expectedIdent)
 	return true;
 }
 
+//TODO tablo lazim komut hangi tip oldugu belirsiz
+
 //<add>/<sub>/<or>/<xor>/<and> ::= <register> (<register> | <hex>)
 void Parser::parseALUcommands()
 {
-	
+	int opcode = m_currentToken.m_type;
+
+	nextToken();
+	if (!expect(m_currentToken, asmc::TokenType::REGISTER))
+	{
+		return;
+	}
+
+	//type ADD/SUB/XOR... rx,ry 
+	if (checkPeek(asmc::TokenType::REGISTER))
+	{
+		createMemoryLayout(2, opcode);
+	}
+	//type ADD/SUB/XOR... rx,0xff 
+	else if (checkPeek(asmc::TokenType::HEXNUMBER))
+	{
+		createMemoryLayout(3, opcode);
+	}
+}
+
+void Parser::parseJumpCommands()
+{
+	int opcode = m_currentToken.m_type;
+
+	nextToken();
+	if (!expect(m_currentToken, asmc::TokenType::JUMPLOC))
+	{
+		return;
+	}
+
+	//is it forward declared label ?
+	if (!m_symbolTable.contains(m_currentToken.m_text))
+	{
+		m_symbolTable[m_currentToken.m_text] = { m_ramLocation, LabelStatus::Undefined };
+
+		//push jgz location info for second pass calc
+		m_jumpTable[m_currentToken.m_text] =
+		{
+			.m_ramIndex = m_ramLocation,
+			.m_opcode = opcode,
+			.m_firstByte = 0,
+			.m_secondByte = 0,
+			.m_byteAmount = 2
+		};
+
+		m_ramLocation += 2;
+	}
+	else
+	{
+		m_symbolTable[m_currentToken.m_text].m_status = LabelStatus::Used;
+		//calc hex push it to std::vector
+
+		MemoryLayout ml;
+		ml.m_byteAmount = 2;
+		ml.m_ramIndex = m_ramLocation;
+		ml.m_opcode = opcode;
+		ml.m_firstByte = m_symbolTable[m_currentToken.m_text].m_ramIndex;
+
+		//DEBUG_printMessage("hey [" + std::to_string(ml.m_firstByte) + "]");
+
+		m_output.push_back(ml);
+
+		m_ramLocation += ml.m_byteAmount;
+	}
+
+	nextToken();//m_currentToken => Label?
 }
 
 void Parser::parseMOV()

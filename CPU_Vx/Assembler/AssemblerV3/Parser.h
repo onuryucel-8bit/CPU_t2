@@ -63,7 +63,11 @@ struct MemoryLayout
 	int m_byteAmount = 0;
 };
 
-
+struct OpcodePair
+{
+	int regRegister;//ADD rx,ry
+	int regImmediate;//ADD rx,0xfa
+};
 
 class Parser
 {
@@ -99,6 +103,7 @@ private:
 	void printError(std::string message);
 	void printOutput();
 
+	void createMemoryLayout(int byteAmount, int opcode);
 	bool expect(asmc::Token token, asmc::TokenType expectedIdent);
 
 	bool f_errorParser;
@@ -109,7 +114,7 @@ private:
 	asmc::Token m_currentToken;
 	asmc::Token m_peekToken;
 
-
+	std::unordered_map<asmc::TokenType, OpcodePair> m_variantTable;
 	std::unordered_map<std::string, SymbolInfo> m_symbolTable;
 	std::unordered_map<std::string, MemoryLayout> m_jumpTable;
 
@@ -119,6 +124,7 @@ private:
 	asmc::Lexer* m_lexer;
 
 	void parseALUcommands();
+	void parseJumpCommands();
 
 	void parseMOV();
 	void parseLOAD();

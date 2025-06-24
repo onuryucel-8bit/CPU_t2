@@ -2,7 +2,6 @@
 namespace asmc 
 {
 
-
 Lexer::Lexer(std::string program)
 {
 	m_program = program;
@@ -14,65 +13,6 @@ Lexer::Lexer(std::string program)
 
 	nextChar();
 }
-
-char Lexer::peek()
-{
-	if (m_position + 1 >= m_program.length())
-	{
-		return ENDOFLINE;
-	}
-	return m_program[m_position + 1];
-}
-
-bool Lexer::checkIfKeyword(std::string token)
-{
-	std::optional<TokenType> colorName = magic_enum::enum_cast<TokenType>(token);
-	if (colorName.has_value())
-	{
-		//std::cout << colorName.value() << "\n";
-		return true;
-	}
-
-	return false;
-}
-
-//is 0xfa
-bool Lexer::isNumberHex()
-{
-	if (m_currentChar == '0' && peek() == 'x' && std::isxdigit(static_cast<uchar>(peekOverX())))
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool Lexer::isOperand()
-{
-	//isxdigit() checks next char is it hex?
-	//register ?
-	if (m_currentChar == 'r' && std::isxdigit(static_cast<uchar>(peek())))
-	{
-		return true;
-	}
-	//is 0xfa
-	else if (isNumberHex())
-	{
-		return true;
-	}
-
-	return false;
-}
-
-void Lexer::printError(std::string message)
-{
-	std::cout << rang::fg::red
-		<< "ERROR::" << message
-		//<< " line number = " << m_lineNumber
-		//<< " next and peek Token [" << m_currentToken.m_text << " " << m_peekToken.m_text
-		<< rang::style::reset << "\n";
-}
-
 
 Token Lexer::getToken()
 {
@@ -249,11 +189,71 @@ Token Lexer::getToken()
 	return token;
 }
 
-bool Lexer::getErrorFlag()
+char Lexer::peek()
 {
-	return f_error;
+	if (m_position + 1 >= m_program.length())
+	{
+		return ENDOFLINE;
+	}
+	return m_program[m_position + 1];
 }
 
+char Lexer::peekOverX()
+{
+	if (m_position + 2 >= m_program.length())
+	{
+		return ENDOFLINE;
+	}
+	return m_program[m_position + 2];
+}
+
+//--------------------------------------------//
+//--------------------------------------------//
+//--------------------------------------------//
+
+bool Lexer::checkIfKeyword(std::string token)
+{
+	std::optional<TokenType> colorName = magic_enum::enum_cast<TokenType>(token);
+	if (colorName.has_value())
+	{
+		//std::cout << colorName.value() << "\n";
+		return true;
+	}
+
+	return false;
+}
+
+//is 0xfa
+bool Lexer::isNumberHex()
+{
+	if (m_currentChar == '0' && peek() == 'x' && std::isxdigit(static_cast<uchar>(peekOverX())))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool Lexer::isOperand()
+{
+	//isxdigit() checks next char is it hex?
+	//register ?
+	if (m_currentChar == 'r' && std::isxdigit(static_cast<uchar>(peek())))
+	{
+		return true;
+	}
+	//is 0xfa
+	else if (isNumberHex())
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//--------------------------------------------//
+//--------------------------------------------//
+//--------------------------------------------//
 void Lexer::skipComments()
 {
 	if (m_currentChar == ';')
@@ -272,15 +272,6 @@ void Lexer::skipWhiteSpace()
 	{
 		nextChar();
 	}
-}
-
-char Lexer::peekOverX()
-{
-	if (m_position + 2 >= m_program.length())
-	{
-		return ENDOFLINE;
-	}
-	return m_program[m_position + 2];
 }
 
 //skip ',' '\n'
@@ -309,6 +300,24 @@ void Lexer::nextChar()
 	{
 		m_currentChar = m_program[m_position];
 	}
+}
+
+//--------------------------------------------//
+//--------------------------------------------//
+//--------------------------------------------//
+
+void Lexer::printError(std::string message)
+{
+	std::cout << rang::fg::red
+		<< "ERROR::" << message
+		//<< " line number = " << m_lineNumber
+		//<< " next and peek Token [" << m_currentToken.m_text << " " << m_peekToken.m_text
+		<< rang::style::reset << "\n";
+}
+
+bool Lexer::getErrorFlag()
+{
+	return f_error;
 }
 
 }

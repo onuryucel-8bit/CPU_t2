@@ -49,12 +49,12 @@ enum TokenType
 	XOR,
 	NOT,
 
-	JMP,
-	JZ,
-	JLZ,
+	JMP = 0x20,
+	JZ = 0x21,
+	JLZ = 0x22,
 	JGZ = 0x23,
-	JSC,
-	JUC,
+	JSC = 0x25,
+	JUC = 0x26,
 
 	//math for macro and variables
 	PLUS,
@@ -77,14 +77,14 @@ class Lexer
 {
 public:
 	
-
 	Lexer(std::string program);
 
+	//sonraki karakteri isaret eder
 	void nextChar();
 
 	char peek();
 	//0x4f peeks over 'x' returns 4
-	char peekOverX();	
+	char peekOverX();
 	
 	Token getToken();
 
@@ -98,12 +98,14 @@ private:
 
 	void printError(std::string message);
 
+	//bosluklari es gecer
 	void skipWhiteSpace();
+	//aciklama satiri ; sonrasindaki karakterleri es gecer
 	void skipComments();
 	//skip ',' '\n'
 	void skipNonEssential();
 
-	
+	//str token enum icerisinde tanimlimi
 	bool checkIfKeyword(std::string token);
 
 	int m_position;

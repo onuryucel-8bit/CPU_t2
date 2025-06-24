@@ -1,13 +1,4 @@
 #include <iostream>
-#include <string>
-#include <cctype>
-
-//#include "Assembler/AssemblerCPU_t2.h"
-
-//#include "LogisimRamPrinter.h"
-//#include "LibsLocal/magic_enum/magic_enum.hpp"
-
-
 
 //-------------------parser-----------------------//
 
@@ -19,7 +10,7 @@
 #include "LogisimRamPrinter.h"
 
 //asmc asm compiler
-void run()
+int main()
 {
 	FileReader fr;
 	std::string program = fr.read("program.txt");
@@ -31,29 +22,18 @@ void run()
 
 	if (p.checkError())
 	{
-		return;
+		return -1;
 	}
 	std::cout << std::dec << rang::bg::blue << "Sending the data to logisim printer..." << rang::style::reset << "\n";
 
 	LogisimRamPrinter lrp;
 	std::vector<int> a = p.getBinaryData();
 	lrp.run(a);
-
-}
-
-int main()
-{
-	
-	run();
-
-	//asmp::AssemblerCPU_t2 assembler(file);
-	//std::vector<int> output = assembler.run();
-	
-	//LogisimRamPrinter printer;
-	//printer.run(output);
 }
 
 //tekrar eden fonksiyonlari birlestir
+//	Ziplama komutlari tamam
+
 //hex sayilari kombinle
 //TODO m_lineNumber nokta atisi hatanin oldugu satiri gostersin
 
