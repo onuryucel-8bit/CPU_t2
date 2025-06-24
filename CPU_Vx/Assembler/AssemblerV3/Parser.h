@@ -7,6 +7,8 @@
 #include "../LibsLocal/magic_enum/magic_enum.hpp"
 #include "../LibsLocal/rang.hpp"
 
+#include "../utils/Radix.h"
+
 #include "Lexer.h"
 
 //TODO bazi kisimlarda regex kullanilabilir
@@ -71,7 +73,10 @@ public:
 
 	//parser
 	void program();
+	
+	std::vector<int> getBinaryData();
 
+	bool checkError();
 
 private:	
 
@@ -82,6 +87,8 @@ private:
 
 	void nextToken();	
 	void statement();
+
+	void generateBinaryArr();
 
 #ifdef _DEBUG
 	void DEBUG_printMessage(std::string message);
@@ -107,11 +114,13 @@ private:
 	std::unordered_map<std::string, MemoryLayout> m_jumpTable;
 
 	std::vector<MemoryLayout> m_output;
+	std::vector<int> m_binaryProgram;
 
 	asmc::Lexer* m_lexer;
 
 	void parseALUcommands();
 
+	void parseMOV();
 	void parseLOAD();
 	void parseADD();
 	void parseSUB();

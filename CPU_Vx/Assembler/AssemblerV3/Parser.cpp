@@ -48,7 +48,7 @@ void Parser::secondPass()
 		}
 	}
 
-	printOutput();
+	
 }
 
 bool Parser::checkToken(asmc::TokenType type)
@@ -80,23 +80,37 @@ void Parser::program()
 
 	std::cout << std::boolalpha << "lexer error flag "<< m_lexer->getErrorFlag() << "\n";
 	
-	std::cout << rang::bg::blue << "Printing m_symbolTable" << rang::style::reset << "\n";
-
-	for (const auto& [key, value] : m_symbolTable)
-	{
-		std::cout << '[' << key << "] address [" << value.m_ramIndex << "]\n";
-	}
+	
 
 	if (m_lexer->getErrorFlag())
 	{
 		printError("LEXER error occured check");
 	}
 
-	if (!f_errorParser || !m_lexer->getErrorFlag())
+	if (!f_errorParser && !m_lexer->getErrorFlag())
 	{
+		std::cout << rang::bg::blue << "Printing m_symbolTable" << rang::style::reset << "\n";
+
+		for (const auto& [key, value] : m_symbolTable)
+		{
+			std::cout << '[' << key << "] address [" << value.m_ramIndex << "]\n";
+		}
+
 		secondPass();
+		printOutput();
+		generateBinaryArr();
 	}
 	
+}
+
+std::vector<int> Parser::getBinaryData()
+{
+	return m_binaryProgram;
+}
+
+bool Parser::checkError()
+{
+	return f_errorParser || m_lexer->getErrorFlag(); 
 }
 
 void Parser::statement()
@@ -128,6 +142,10 @@ void Parser::statement()
 		parseSTR();		
 		break;
 
+	case asmc::TokenType::MOV:
+		parseMOV();
+		break;
+
 	//skip
 	case asmc::TokenType::LABEL:
 		
@@ -154,6 +172,33 @@ void Parser::statement()
 	DEBUG_printMessage("ramLocation[" + std::to_string(m_ramLocation) +"]");
 }
 
+void Parser::generateBinaryArr()
+{
+	m_binaryProgram.resize(256);
+	for (size_t i = 0; i < m_output.size(); i++)
+	{
+		int ramLocation = m_output[i].m_ramIndex;
+
+		m_binaryProgram[ramLocation] = m_output[i].m_opcode;
+		m_binaryProgram[ramLocation + 1] = m_output[i].m_firstByte;
+
+		if (m_output[i].m_byteAmount == 3)
+		{
+			m_binaryProgram[ramLocation + 2] = m_output[i].m_secondByte;
+		}
+	}
+
+	/*
+	for (size_t i = 0; i < m_binaryProgram.size(); i++)
+	{
+		std::cout << std::hex << m_binaryProgram[i] << "\n";
+	}
+	*/
+}
+//------------------------------------------------------------------------//
+//------------------------------------------------------------------------//
+//------------------------------------------------------------------------//
+
 void Parser::DEBUG_printMessage(std::string message)
 {
 	std::cout << rang::style::underline << rang::fg::green << message << rang::style::reset << "\n";
@@ -179,13 +224,17 @@ void Parser::printError(std::string message)
 
 void Parser::printOutput()
 {
-	std::cout << rang::bg::blue << "Printing output data...\n" << rang::style::reset;
+	std::cout << rang::bg::blue << "Printing output data..." << rang::style::reset <<"\n";
 	for (size_t i = 0; i < m_output.size(); i++)
-	{
-		
+	{		
 		std::cout << std::hex << m_output[i].m_opcode << ":" << m_output[i].m_firstByte <<":" << m_output[i].m_secondByte << std::dec <<"\n";
 	}
 }
+
+//------------------------------------------------------------------------//
+//------------------------------------------------------------------------//
+//------------------------------------------------------------------------//
+
 
 bool Parser::expect(asmc::Token token, asmc::TokenType expectedIdent)
 {
@@ -204,6 +253,43 @@ bool Parser::expect(asmc::Token token, asmc::TokenType expectedIdent)
 void Parser::parseALUcommands()
 {
 	
+}
+
+void Parser::parseMOV()
+{
+	nextToken();//m_currentToken => rx
+	if (!expect(m_currentToken, asmc::TokenType::REGISTER))
+	{
+		return;
+	}
+
+	if (checkPeek(asmc::TokenType::REGISTER))
+	{
+		//m_output.push_back(0);
+
+		std::cout << "MOV rx[" << m_currentToken.m_text << "]:: ry[" << m_peekToken.m_text << "]\n";
+
+
+		MemoryLayout ml;
+		ml.m_byteAmount = 2;
+		ml.m_ramIndex = m_ramLocation;
+		ml.m_opcode = 0x04;
+		ml.m_firstByte = rdx::hexToDeC(m_currentToken.m_text);
+		ml.m_secondByte = rdx::hexToDeC(m_peekToken.m_text);
+
+		//0000_0rrr
+		//00rr_r000
+		ml.m_firstByte = ml.m_firstByte << 3;
+		//00rr_rRRR
+		ml.m_firstByte = ml.m_firstByte | ml.m_secondByte;
+
+		m_output.push_back(ml);
+
+		nextToken();
+		nextToken();//m_currentToken => nextNewToken
+
+		m_ramLocation += ml.m_byteAmount;
+	}
 }
 
 //<load> ::= <register>,(<hexnumber> | <address>)
@@ -228,7 +314,7 @@ void Parser::parseLOAD()
 		ml.m_byteAmount = 3;
 		ml.m_ramIndex = m_ramLocation;
 		ml.m_opcode = 0x01;
-		ml.m_firstByte = std::stoi(m_currentToken.m_text);
+		ml.m_firstByte = rdx::hexToDeC(m_currentToken.m_text);
 		ml.m_secondByte = std::stoi(m_peekToken.m_text);		
 
 		m_output.push_back(ml);
@@ -284,11 +370,30 @@ void Parser::parseADD()
 
 		m_output.push_back(ml);
 
-		nextToken();//m_currentToken => 0xff
+		nextToken();
 		nextToken();//m_currentToken => nextNewToken
 
-		m_ramLocation += 2;
+		m_ramLocation += ml.m_byteAmount;
 	}
+	else if (checkPeek(asmc::TokenType::HEXNUMBER))
+	{
+		MemoryLayout ml;
+		ml.m_byteAmount = 3;
+		ml.m_ramIndex = m_ramLocation;
+		ml.m_opcode = 0x10;
+		ml.m_firstByte = std::stoi(m_currentToken.m_text);
+		ml.m_secondByte = std::stoi(m_peekToken.m_text);
+
+		
+
+		m_output.push_back(ml);
+
+		nextToken();
+		nextToken();//m_currentToken => nextNewToken
+
+		m_ramLocation += ml.m_byteAmount;
+	}
+
 }
 
 void Parser::parseSUB()
@@ -316,8 +421,8 @@ void Parser::parseSUB()
 		ml.m_byteAmount = 3;
 		ml.m_ramIndex = m_ramLocation;
 		ml.m_opcode = asmc::TokenType::SUB;
-		ml.m_firstByte = std::stoi(m_currentToken.m_text);
-		ml.m_secondByte = std::stoi(m_peekToken.m_text);
+		ml.m_firstByte = rdx::hexToDeC(m_currentToken.m_text);
+		ml.m_secondByte = rdx::hexToDeC(m_peekToken.m_text);
 
 
 		
@@ -327,7 +432,7 @@ void Parser::parseSUB()
 		nextToken();//m_currentToken => hexNumber
 		nextToken();//m_currentToken => nextNewToken
 
-		m_ramLocation += 3;
+		m_ramLocation += ml.m_byteAmount;
 	}
 }
 
@@ -371,7 +476,7 @@ void Parser::parseJGZ()
 
 		m_output.push_back(ml);
 
-		m_ramLocation += 2;
+		m_ramLocation += ml.m_byteAmount;
 	}
 
 	nextToken();//m_currentToken => Label?

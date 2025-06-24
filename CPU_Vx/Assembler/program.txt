@@ -1,7 +1,20 @@
+LOAD r0,0x01 ;x = 1
+LOAD r1,0x01 ;y = 1
+LOAD r2,0x00 ;z = 0
 
-LOAD r0,0x5    ;r0 = 5
-LOAD r1,0x0	   ;r1 = 0
+LOAD rf,0x05 ;i = 5
+
 LOOP:
-	ADD r1,r0  ;r1 += r2
-	SUB r0,0x1   ;r0--
-	JGZ LOOP   ;if(ACC > 0) PC = LOOP
+
+	MOV r3,r0  ;tempX = x :: x copy
+	
+	ADD r0,r1  ;z = x + y
+
+	MOV r2,r0  ;z = r0
+
+	MOV r1,r3  ;y = tempX
+	MOV r0,r2  ;x = z
+
+
+	SUB rf,0x01 ;i--
+	JGZ LOOP

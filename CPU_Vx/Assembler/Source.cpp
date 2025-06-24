@@ -16,15 +16,29 @@
 #include "AssemblerV3/Lexer.h"
 #include "AssemblerV3/Parser.h"
 
+#include "LogisimRamPrinter.h"
+
 //asmc asm compiler
 void run()
 {
 	FileReader fr;
-	std::string program = fr.read("compiler.txt");
+	std::string program = fr.read("program.txt");
 
 	asmc::Lexer lexer(program);
 	asmc::Parser p(&lexer);
 	p.program();
+
+
+	if (p.checkError())
+	{
+		return;
+	}
+	std::cout << std::dec << rang::bg::blue << "Sending the data to logisim printer..." << rang::style::reset << "\n";
+
+	LogisimRamPrinter lrp;
+	std::vector<int> a = p.getBinaryData();
+	lrp.run(a);
+
 }
 
 int main()
@@ -35,8 +49,6 @@ int main()
 	//asmp::AssemblerCPU_t2 assembler(file);
 	//std::vector<int> output = assembler.run();
 	
-	
-
 	//LogisimRamPrinter printer;
 	//printer.run(output);
 }
