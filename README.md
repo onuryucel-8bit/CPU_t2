@@ -7,7 +7,8 @@
 #### [RossMcgowan](https://www.youtube.com/@RossMcgowanMaths)
 #### [CrashCourse/ComputerScience](https://www.youtube.com/watch?v=tpIctyqH29Q&list=PL8dPuuaLjXtNlUrzyH5r6jN9ulIgZBpdo)
 
---Albert Paul Malvino :: Digital computer electronics
---M.Morris Mano :: Computer system architecture
---David Harris, Sarah Harris :: Digital Design and Computer Architecture
---Hamacher, Vranesic, Zaky :: Computer Organization
+
+- **Albert Paul Malvino** — *Digital Computer Electronics*
+- **M. Morris Mano** — *Computer System Architecture*
+- **David Harris, Sarah Harris** — *Digital Design and Computer Architecture*
+- **Hamacher, Vranesic, Zaky** — *Computer Organization*
