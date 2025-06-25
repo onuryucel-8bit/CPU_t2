@@ -60,7 +60,7 @@
   <circuit name="main">
     <a name="circuit" val="main"/>
     <a name="circuitnamedboxfixedsize" val="true"/>
-    <a name="simulationFrequency" val="2048000.0"/>
+    <a name="simulationFrequency" val="8000.0"/>
     <comp lib="0" loc="(1000,760)" name="Splitter">
       <a name="appear" val="center"/>
       <a name="facing" val="west"/>
@@ -831,8 +831,26 @@
     <comp lib="8" loc="(1600,875)" name="Text">
       <a name="text" val="posta_A"/>
     </comp>
+    <comp lib="8" loc="(1605,238)" name="Text">
+      <a name="text" val="8:509tik"/>
+    </comp>
+    <comp lib="8" loc="(1606,212)" name="Text">
+      <a name="text" val="7:450tik"/>
+    </comp>
+    <comp lib="8" loc="(1608,182)" name="Text">
+      <a name="text" val="6:391tik"/>
+    </comp>
+    <comp lib="8" loc="(1609,155)" name="Text">
+      <a name="text" val="5:332tik"/>
+    </comp>
     <comp lib="8" loc="(1630,1115)" name="Text">
       <a name="text" val="InstructionReg"/>
+    </comp>
+    <comp lib="8" loc="(1665,112)" name="Text">
+      <a name="text" val="fibonacci"/>
+    </comp>
+    <comp lib="8" loc="(1761,152)" name="Text">
+      <a name="text" val="tikler farki 59"/>
     </comp>
     <comp lib="8" loc="(1770,875)" name="Text">
       <a name="text" val="ROM_Counter"/>
