@@ -668,7 +668,6 @@
     </comp>
     <comp lib="4" loc="(910,2210)" name="RAM">
       <a name="appearance" val="logisim_evolution"/>
-      <a name="labelvisible" val="true"/>
       <a name="trigger" val="falling"/>
       <a name="type" val="nonvolatile"/>
     </comp>

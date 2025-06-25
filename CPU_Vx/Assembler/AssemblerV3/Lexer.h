@@ -19,7 +19,7 @@ using uchar = unsigned char;
 enum TokenType
 {
 
-	ENDOFLINE  =0x52,
+	ENDOFLINE  = -1,
 	NEWLINE =0x53,
 
 	NUMBER = 0x54,

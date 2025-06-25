@@ -340,6 +340,11 @@ void Parser::parseALUcommands()
 		nextToken();
 		nextToken();
 	}
+	else
+	{
+		printError("unexcepted statement\n");
+		f_errorParser = true;
+	}
 }
 
 void Parser::parseJumpCommands()

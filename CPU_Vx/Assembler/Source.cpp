@@ -32,7 +32,6 @@ int main()
 }
 
 //HATALAR
-
 //ram adres sapmasi olursa gidip ramLocation i parseX altinda arttirmis olmalisin
 
 /*
@@ -57,11 +56,7 @@ JGZ-jumps
 */
 
 
-
-//tekrar eden fonksiyonlari birlestir
-//	Ziplama komutlari tamam
-
-//hex sayilari kombinle
+//TODO hata sistemini iyilestir
 //TODO m_lineNumber nokta atisi hatanin oldugu satiri gostersin
 
 
