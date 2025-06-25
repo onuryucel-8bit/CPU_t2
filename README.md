@@ -4,5 +4,10 @@
 #### [ChiliTomatoNoodle](https://www.youtube.com/watch?v=Kbbzwabgtok&list=PLqCJpWy5Fohdz6Nu2yG6Loubocqk3sRNR)
 #### [CoreDumped](https://www.youtube.com/@CoreDumpped)
 #### [rj45 Creates](https://www.youtube.com/watch?v=FSVhlqE7EgA&list=PLilenfQGj6CEG6iZ4TQJ10PI7pCWsy1AO)
+#### [RossMcgowan](https://www.youtube.com/@RossMcgowanMaths)
+#### [CrashCourse/ComputerScience](https://www.youtube.com/watch?v=tpIctyqH29Q&list=PL8dPuuaLjXtNlUrzyH5r6jN9ulIgZBpdo)
 
---albert paul malvino digital computer electronics
+--Albert Paul Malvino :: Digital computer electronics
+--M.Morris Mano :: Computer system architecture
+--David Harris, Sarah Harris :: Digital Design and Computer Architecture
+--Hamacher, Vranesic, Zaky :: Computer Organization
