@@ -94,9 +94,8 @@ private:
 
 	void generateBinaryArr();
 
-#ifdef _DEBUG
+
 	void DEBUG_printMessage(std::string message);
-#endif // _DEBUG
 
 	
 	void printWarning(std::string message);
@@ -105,6 +104,7 @@ private:
 
 	void createMemoryLayout(int byteAmount, int opcode);
 	bool expect(asmc::Token token, asmc::TokenType expectedIdent);
+
 
 	bool f_errorParser;
 	int m_lineNumber;
@@ -126,12 +126,14 @@ private:
 	void parseALUcommands();
 	void parseJumpCommands();
 
+	void parseOUT();
 	void parseMOV();
 	void parseLOAD();
 	void parseADD();
 	void parseSUB();
 	void parseJGZ();
 	void parseSTR();
+	void parseNOT();
 };
 
 }

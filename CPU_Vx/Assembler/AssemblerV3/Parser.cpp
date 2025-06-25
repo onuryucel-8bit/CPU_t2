@@ -136,16 +136,32 @@ void Parser::statement()
 		nextToken();
 		break;
 
+	case asmc::TokenType::OUT:
+		parseOUT();
+		break;
+
 	case asmc::TokenType::LOAD:
 		parseLOAD();		
 		break;
-
-	case asmc::TokenType::ADD:
-		parseADD();				
+	case asmc::TokenType::STR:
+		parseSTR();		
+		break;
+	case asmc::TokenType::MOV:
+		parseMOV();
 		break;
 
 	case asmc::TokenType::SUB:
-		parseSUB();		
+	case asmc::TokenType::ADD:
+	case asmc::TokenType::AND:
+	case asmc::TokenType::OR:
+	case asmc::TokenType::XOR:
+	case asmc::TokenType::SHL:
+	case asmc::TokenType::SHR:
+		parseALUcommands();		
+		break;
+
+	case asmc::TokenType::NOT:
+		parseNOT();
 		break;
 
 	case asmc::TokenType::JMP:
@@ -158,14 +174,8 @@ void Parser::statement()
 		parseJumpCommands();
 		break;
 
-	case asmc::TokenType::STR:
-		parseSTR();		
-		break;
 
-	case asmc::TokenType::MOV:
-		parseMOV();
-		break;
-
+	
 	//skip
 	case asmc::TokenType::LABEL:
 		
@@ -180,7 +190,7 @@ void Parser::statement()
 
 		m_symbolTable[m_currentToken.m_text] = { m_ramLocation, LabelStatus::NotUsed };
 
-		DEBUG_printMessage("label address[" + std::to_string(m_ramLocation) + "]");
+		//DEBUG_printMessage("label address[" + std::to_string(m_ramLocation) + "]");
 
 		m_lineNumber--;
 		nextToken();		
@@ -189,11 +199,12 @@ void Parser::statement()
 		break;
 	}
 
-	DEBUG_printMessage("ramLocation[" + std::to_string(m_ramLocation) +"]");
+	//DEBUG_printMessage("ramLocation[" + std::to_string(m_ramLocation) +"]");
 }
 
 void Parser::generateBinaryArr()
 {
+	std::cout << rang::bg::blue << "Generating binary data..." << rang::style::reset << "\n";
 	m_binaryProgram.resize(256);
 	for (size_t i = 0; i < m_output.size(); i++)
 	{
@@ -207,16 +218,16 @@ void Parser::generateBinaryArr()
 			m_binaryProgram[ramLocation + 2] = m_output[i].m_secondByte;
 		}
 	}
-
-	/*
+	/*std::cout << "HEY!!!\n";
+	
 	for (size_t i = 0; i < m_binaryProgram.size(); i++)
 	{
 		std::cout << std::hex << m_binaryProgram[i] << "\n";
 	}
-	*/
+	std::cout << std::dec;*/
 }
 //------------------------------------------------------------------------//
-//------------------------------------------------------------------------//
+//-----------------------PRINT--------------------------------------------//
 //------------------------------------------------------------------------//
 
 void Parser::DEBUG_printMessage(std::string message)
@@ -262,7 +273,22 @@ void Parser::createMemoryLayout(int byteAmount, int opcode)
 	ml.m_ramIndex = m_ramLocation;
 	ml.m_opcode = opcode;
 	ml.m_firstByte = rdx::hexToDeC(m_currentToken.m_text);
-	ml.m_secondByte = rdx::hexToDeC(m_peekToken.m_text);
+
+	if (m_peekToken.m_type != asmc::TokenType::ENDOFLINE)
+	{
+		ml.m_secondByte = rdx::hexToDeC(m_peekToken.m_text);
+	}
+	
+
+	if (byteAmount == 2)
+	{
+		
+		//0000_0rrr
+		//00rr_r000
+		ml.m_firstByte = ml.m_firstByte << 3;
+		//00rr_rRRR
+		ml.m_firstByte = ml.m_firstByte | ml.m_secondByte;
+	}
 
 	m_output.push_back(ml);
 
@@ -284,10 +310,15 @@ bool Parser::expect(asmc::Token token, asmc::TokenType expectedIdent)
 
 //TODO tablo lazim komut hangi tip oldugu belirsiz
 
+
+//------------------------------------------------------------------------//
+//-------------------------ParseX()---------------------------------------//
+//------------------------------------------------------------------------//
+
 //<add>/<sub>/<or>/<xor>/<and> ::= <register> (<register> | <hex>)
 void Parser::parseALUcommands()
-{
-	int opcode = m_currentToken.m_type;
+{	
+	OpcodePair opcode = m_variantTable[m_currentToken.m_type];
 
 	nextToken();
 	if (!expect(m_currentToken, asmc::TokenType::REGISTER))
@@ -297,13 +328,17 @@ void Parser::parseALUcommands()
 
 	//type ADD/SUB/XOR... rx,ry 
 	if (checkPeek(asmc::TokenType::REGISTER))
-	{
-		createMemoryLayout(2, opcode);
+	{		
+		createMemoryLayout(2, opcode.regRegister);
+		nextToken();
+		nextToken();
 	}
 	//type ADD/SUB/XOR... rx,0xff 
 	else if (checkPeek(asmc::TokenType::HEXNUMBER))
 	{
-		createMemoryLayout(3, opcode);
+		createMemoryLayout(3, opcode.regImmediate);
+		nextToken();
+		nextToken();
 	}
 }
 
@@ -355,6 +390,35 @@ void Parser::parseJumpCommands()
 	nextToken();//m_currentToken => Label?
 }
 
+void Parser::parseOUT()
+{
+	nextToken();//m_currentToken => rx
+	if (!expect(m_currentToken, asmc::TokenType::REGISTER))
+	{
+		return;
+	}
+
+	if (checkPeek(asmc::TokenType::REGISTER))
+	{
+		createMemoryLayout(2, 0x05);
+
+		nextToken();//m_currentToken => 0xff
+		nextToken();//m_currentToken => nextNewToken
+	}
+	else if (checkPeek(asmc::TokenType::ADDRESS))
+	{
+		createMemoryLayout(2, 0x06);
+
+		nextToken();//m_currentToken => 0xff
+		nextToken();//m_currentToken => nextNewToken
+	}
+	else
+	{
+		printError("OUT :: unexpected ls");
+	}
+
+}
+
 void Parser::parseMOV()
 {
 	nextToken();//m_currentToken => rx
@@ -397,6 +461,8 @@ void Parser::parseLOAD()
 {
 	//LOAD rx,0xff/@5e
 
+	int opcode = m_currentToken.m_type;
+
 	nextToken();//m_currentToken => rx
 	if (!expect(m_currentToken, asmc::TokenType::REGISTER))
 	{
@@ -410,24 +476,21 @@ void Parser::parseLOAD()
 
 		std::cout <<"LOAD rx[" << m_currentToken.m_text << "]:: sayi[" << m_peekToken.m_text << "]\n";
 
-		MemoryLayout ml;
-		ml.m_byteAmount = 3;
-		ml.m_ramIndex = m_ramLocation;
-		ml.m_opcode = 0x01;
-		ml.m_firstByte = rdx::hexToDeC(m_currentToken.m_text);
-		ml.m_secondByte = std::stoi(m_peekToken.m_text);		
-
-		m_output.push_back(ml);
-
+		createMemoryLayout(3, 0x01);
+		
 		nextToken();//m_currentToken => 0xff
 		nextToken();//m_currentToken => nextNewToken
 
-		m_ramLocation += 3;
+		
 	}
 	//LOAD rx,@fa ?
 	else if (checkPeek(asmc::TokenType::ADDRESS))
 	{
 		std::cout << "LOAD rx[" << m_currentToken.m_text << "]:: address[" << m_peekToken.m_text << "]\n";
+
+		createMemoryLayout(3, 0x02);
+
+		
 
 		nextToken();//m_currentToken => address
 		nextToken();//m_currentToken => nextNewToken
@@ -536,6 +599,7 @@ void Parser::parseSUB()
 	}
 }
 
+/*
 void Parser::parseJGZ()
 {
 	nextToken();
@@ -581,9 +645,54 @@ void Parser::parseJGZ()
 
 	nextToken();//m_currentToken => Label?
 }
+*/
 
 void Parser::parseSTR()
 {
+	int opcode = m_currentToken.m_type;
+
+	nextToken();
+	if (!expect(m_currentToken, asmc::TokenType::ADDRESS))
+	{
+		return;
+	}
+
+	if (checkPeek(asmc::TokenType::REGISTER))
+	{
+		createMemoryLayout(3, opcode);
+
+		nextToken();
+		nextToken();
+	}
+
+}
+
+void Parser::parseNOT()
+{
+	int opcode = m_currentToken.m_type;
+
+	nextToken();//currentoken => rx
+	if (!expect(m_currentToken, asmc::TokenType::REGISTER))
+	{
+		return;
+	}
+
+	if (checkToken(asmc::TokenType::REGISTER))
+	{
+		MemoryLayout ml;
+		ml.m_byteAmount = 2;
+		ml.m_ramIndex = m_ramLocation;
+		ml.m_opcode = opcode;
+		ml.m_firstByte = rdx::hexToDeC(m_currentToken.m_text);
+
+		m_output.push_back(ml);
+
+		m_ramLocation += 2;
+
+		//currenttoken => nextToken
+		//peek => nexttoken + 1
+		nextToken();		
+	}
 }
 
 }

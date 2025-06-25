@@ -8,6 +8,8 @@
 #include "../LibsLocal/magic_enum/magic_enum.hpp"
 #include "../LibsLocal/rang.hpp"
 
+#undef OUT //isim cakismasi var windows.h la galiba?
+
 namespace asmc
 {
 
@@ -17,15 +19,15 @@ using uchar = unsigned char;
 enum TokenType
 {
 
-	ENDOFLINE,
-	NEWLINE,
+	ENDOFLINE  =0x52,
+	NEWLINE =0x53,
 
-	NUMBER,
+	NUMBER = 0x54,
 	//IDENT,
 	//STRING,
 
-	LABEL,
-	JUMPLOC,
+	LABEL = 0x55,
+	JUMPLOC = 0x56,
 
 	//Operands
 	REGISTER,
@@ -33,24 +35,25 @@ enum TokenType
 	ADDRESS,
 
 	//Opcodes
-	LOAD,
-	 LOADadr,
-	STR,
-	asmcOUT,
-	MOV,
+	LOAD = 0x01,	
+	STR = 0x03,
+	MOV = 0x04,
+	OUT = 0x05,
+	
 
-	ADD,
-	SUB = 0x11,
-	SHL,
-	SHR,
+	ADD = 0x08,
+	SUB = 0x09,
+	SHL = 0x0a,
+	SHR = 0x0b,
 
-	AND,
-	OR,
-	XOR,
-	NOT,
+	AND = 0x0c,
+	OR  = 0x0d,
+	NOT = 0x0e,
+	XOR = 0x0f,
+	
 
 	JMP = 0x20,
-	JZ = 0x21,
+	JZ  = 0x21,
 	JLZ = 0x22,
 	JGZ = 0x23,
 	JSC = 0x25,
@@ -61,8 +64,6 @@ enum TokenType
 	MINUS,
 	SLASH,
 	ASTERISK,
-
-
 
 	EMPTY
 };

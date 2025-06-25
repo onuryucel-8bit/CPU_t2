@@ -31,6 +31,33 @@ int main()
 	lrp.run(a);
 }
 
+//HATALAR
+
+//ram adres sapmasi olursa gidip ramLocation i parseX altinda arttirmis olmalisin
+
+/*
+
+SHR
+SHL
+XOR
+OR
+
+AND
+NOT
+ADD
+SUB
+
+STR
+LOAD
+MOV
+SUB
+JGZ-jumps
+
+
+*/
+
+
+
 //tekrar eden fonksiyonlari birlestir
 //	Ziplama komutlari tamam
 
