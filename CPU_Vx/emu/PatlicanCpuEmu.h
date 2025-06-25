@@ -61,6 +61,8 @@ private:
 	int sayi;
 	int opcode;
 
+	int sumCarry = 0;
+	int underflow = 0;
 	int ACC = 0;
 
 	void printOutReg();

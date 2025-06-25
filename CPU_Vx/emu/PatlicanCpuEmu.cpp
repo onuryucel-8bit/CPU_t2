@@ -47,7 +47,7 @@ void PatlicanCpuEmu::run()
 	{
 
 		opcode = ram[programCounter];
-
+		
 		switch (opcode)
 		{
 		case OPCODE::HLT:
@@ -58,30 +58,80 @@ void PatlicanCpuEmu::run()
 			LOAD0x1();
 			programCounter++;
 			break;
-
-		case OPCODE::OUT:
-			OUT0x5();
-			programCounter++;
+		case OPCODE::LOADa:
+			LOAD0x2();			
 			break;
-
+		case OPCODE::STR:
+			STR0x3();
+			break;
 		case OPCODE::MOV:
 			MOV0x4();
-			programCounter++;
 			break;
-
-		case OPCODE::SUBs:
-			SUB0x11();
-			programCounter++;
+		case OPCODE::OUT:
+			OUT0x5();
 			break;
+		case OPCODE::OUTa:
+			OUT0x6();			
+			break; 
+		
 
 		case OPCODE::ADD:
-			ADD0x8();
-			programCounter++;
+			ADD0x8();			
+			break;
+		case OPCODE::SUB:
+			SUB0x9();
+			break;
+		case OPCODE::SHL:
+			SHL0xa();
+			break;
+		case OPCODE::SHR:
+			SHR0xb();
+			break;
+		case OPCODE::AND:
+			AND0xc();
+			break;
+		case OPCODE::OR:
+			OR0xd();
+			break;
+		case OPCODE::NOT:
+			NOT0xe();
+			break;
+		case OPCODE::XOR:
+			XOR0xf();
 			break;
 
+		case OPCODE::ADDs:
+			ADD0x10();
+			break;
+		case OPCODE::SUBs:
+			SUB0x11();
+			break;
+		case OPCODE::ORs:
+			OR0x15();
+			break;
+		case OPCODE::XORs:
+			XOR0x17();
+			break;
+
+		case OPCODE::JMP:
+			JMP0x20();
+			break;
+		case OPCODE::JZ:
+			JZ0x21();
+			break;
+		case OPCODE::JLZ:
+			JLZ0x22();
+			break;
 		case OPCODE::JGZ:
 			JGZ0x23();
 			break;
+		case OPCODE::JSC:
+			JSC0x25();
+			break;
+		case OPCODE::JUC:
+			JUC0x26();
+			break;
+
 		}
 
 	}
@@ -223,65 +273,164 @@ void PatlicanCpuEmu::SHR0xb()
 
 void PatlicanCpuEmu::AND0xc()
 {
+	programCounter++;
+	int regByte = ram[programCounter];
+
+	int rx = regByte & 0x38;
+	rx >>= 3;
+	int ry = regByte & 0x07;
+
+	regs[rx] = regs[rx] & regs[ry];
+
+	ACC = regs[rx];
+	
 }
+
 
 void PatlicanCpuEmu::OR0xd()
 {
+	programCounter++;
+	int regByte = ram[programCounter];
+
+	int rx = regByte & 0x38;
+	rx >>= 3;
+	int ry = regByte & 0x07;
+
+	regs[rx] = regs[rx] | regs[ry];
+
+	ACC = regs[rx];
 }
 
 void PatlicanCpuEmu::NOT0xe()
 {
+	programCounter++;
+	int rx = ram[programCounter];
+	
+	regs[rx] = ~regs[rx];
+
+	ACC = regs[rx];
 }
 
 void PatlicanCpuEmu::XOR0xf()
 {
+	programCounter++;
+	int regByte = ram[programCounter];
+
+	int rx = regByte & 0x38;
+	rx >>= 3;
+	int ry = regByte & 0x07;
+
+	regs[rx] = regs[rx] ^ regs[ry];
+
+	ACC = regs[rx];
 }
 
 void PatlicanCpuEmu::ADD0x10()
 {
+	programCounter++;
+	int rx = ram[programCounter];
+
+	programCounter++;
+	int number = ram[programCounter];
+
+	regs[rx] = regs[rx] + number;
+
+	ACC = regs[rx];
 }
 
 void PatlicanCpuEmu::SUB0x11()
 {
+	programCounter++;
+	int rx = ram[programCounter];
+
+	programCounter++;
+	int number = ram[programCounter];
+
+	regs[rx] = regs[rx] - number;
+
+	ACC = regs[rx];
 }
 
 void PatlicanCpuEmu::AND0x14()
 {
+	programCounter++;
+	int rx = ram[programCounter];
+
+	programCounter++;
+	int number = ram[programCounter];
+
+	regs[rx] = regs[rx] & number;
+
+	ACC = regs[rx];
 }
 
 void PatlicanCpuEmu::OR0x15()
 {
+	programCounter++;
+	int rx = ram[programCounter];
+
+	programCounter++;
+	int number = ram[programCounter];
+
+	regs[rx] = regs[rx] | number;
+
+	ACC = regs[rx];
 }
 
 void PatlicanCpuEmu::XOR0x17()
 {
+	programCounter++;
+	int rx = ram[programCounter];
+
+	programCounter++;
+	int number = ram[programCounter];
+
+	regs[rx] = regs[rx] ^ number;
+
+	ACC = regs[rx];
 }
 
 void PatlicanCpuEmu::JMP0x20()
 {
+	programCounter++;
+	int address = ram[programCounter];
+	
+	programCounter = address;
 }
 
 void PatlicanCpuEmu::JZ0x21()
 {
+			
+	if (ACC == 0)
+	{
+		programCounter++;
+		//adresi al
+		int adres = ram[programCounter];
+	
+		programCounter = adres;
+	}
+	else
+	{
+		//ziplama komutunu atla
+		programCounter += 2;
+	}
 }
 
 void PatlicanCpuEmu::JLZ0x22()
 {
-}
+	if (ACC < 0)
+	{
+		programCounter++;
+		//adresi al
+		int adres = ram[programCounter];
 
-void PatlicanCpuEmu::SUB0x11()
-{
-	programCounter++;
-	opcode = ram[programCounter];
-
-	rx = opcode & 0x07;
-
-	programCounter++;
-	sayi = ram[programCounter];
-
-	regs[rx] = regs[rx] - sayi;
-
-	ACC = regs[rx];
+		programCounter = adres;
+	}
+	else
+	{
+		//ziplama komutunu atla
+		programCounter += 2;
+	}
 }
 
 void PatlicanCpuEmu::JGZ0x23()
@@ -304,8 +453,34 @@ void PatlicanCpuEmu::JGZ0x23()
 
 void PatlicanCpuEmu::JSC0x25()
 {
+	if (underflow == 1)
+	{
+		programCounter++;
+		//adresi al
+		int adres = ram[programCounter];
+
+		programCounter = adres;
+	}
+	else
+	{
+		//ziplama komutunu atla
+		programCounter += 2;
+	}
 }
 
 void PatlicanCpuEmu::JUC0x26()
 {
+	if (sumCarry == 1)
+	{
+		programCounter++;
+		//adresi al
+		int adres = ram[programCounter];
+
+		programCounter = adres;
+	}
+	else
+	{
+		//ziplama komutunu atla
+		programCounter += 2;
+	}
 }
