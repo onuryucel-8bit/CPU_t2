@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <cstdint>
 
 enum OPCODE
 {
@@ -42,31 +43,31 @@ enum OPCODE
 class PatlicanCpuEmu
 {
 public:
-	PatlicanCpuEmu(int* _ram, size_t ramSize);
+	PatlicanCpuEmu(uint8_t* _ram, size_t ramSize);
 	~PatlicanCpuEmu();
 	
 	void run();
 
+	void reset();
+	void printRegs();
+
 private:
 
 	static const int RAMSIZE = 256;	
-	int ram[RAMSIZE];
+	uint8_t ram[RAMSIZE];
 
 
 	int programCounter = 0;
 	int regs[8];
 	int outReg;
 
-	int rx, ry;
-	int sayi;
-	int opcode;
+	int rx, ry;	
+	int currentOpcode;
 
 	int sumCarry = 0;
 	int underflow = 0;
 	int ACC = 0;
-
-	void printOutReg();
-	void printRegs();
+	
 	void clearRegs();
 
 	//--------------------------//

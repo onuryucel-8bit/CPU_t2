@@ -37,23 +37,31 @@ JSC	0010_0101	0x25
 JUC	0010_0110	0x26
 */
 
+#include <fstream>
 
 #include "PatlicanCpuEmu.h"
 
-int ram[256] =
+uint8_t ram[256];
+
+void readFile(const std::string path)
 {
-	LOAD,0x00,0x05,
-	LOAD,0x01,0x00,
+	std::ifstream file(path, std::ios::binary);
 
-	ADD,0x08,
-	SUBs,0x00,0x01,
+	if (!file)
+	{
+		std::cerr << "ERROR :: readFile() path is invalid\n";
+		return;
+	}
 
-	JGZ,0x06,
-	OUT,0x01,HLT
-};
+	file.read((char*)ram, 256);
+	
+	file.close();
+}
 
 int main()
 {
+	readFile("program.bin");
+
 	PatlicanCpuEmu emu(ram, 256);
 	emu.run();
 }
