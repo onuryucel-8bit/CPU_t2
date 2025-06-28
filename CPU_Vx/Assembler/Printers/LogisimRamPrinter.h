@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "utils/Radix.h"
+#include "../utils/Radix.h"
 
 class LogisimRamPrinter
 {

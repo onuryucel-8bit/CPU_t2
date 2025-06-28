@@ -114,24 +114,27 @@ private:
 	asmc::Token m_currentToken;
 	asmc::Token m_peekToken;
 
+	//ADD rx,sayi <=> ADD rx,ry ALU komutlarin farkli turevleri icin
 	std::unordered_map<asmc::TokenType, OpcodePair> m_variantTable;
+
 	std::unordered_map<std::string, SymbolInfo> m_symbolTable;
 	std::unordered_map<std::string, MemoryLayout> m_jumpTable;
 
+	//cikti oncesi verinin tutuldugu vektor
 	std::vector<MemoryLayout> m_output;
+	//cikti
 	std::vector<int> m_binaryProgram;
 
 	asmc::Lexer* m_lexer;
 
+	//ADD,SUB,AND...
 	void parseALUcommands();
+	//JMP,JGZ,JUC...
 	void parseJumpCommands();
 
 	void parseOUT();
 	void parseMOV();
-	void parseLOAD();
-	void parseADD();
-	void parseSUB();
-	void parseJGZ();
+	void parseLOAD();	
 	void parseSTR();
 	void parseNOT();
 };

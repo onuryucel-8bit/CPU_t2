@@ -279,7 +279,7 @@ void Parser::createMemoryLayout(int byteAmount, int opcode)
 		ml.m_secondByte = rdx::hexToDeC(m_peekToken.m_text);
 	}
 	
-
+	
 	if (byteAmount == 2)
 	{
 		
@@ -307,8 +307,6 @@ bool Parser::expect(asmc::Token token, asmc::TokenType expectedIdent)
 	
 	return true;
 }
-
-//TODO tablo lazim komut hangi tip oldugu belirsiz
 
 
 //------------------------------------------------------------------------//
@@ -508,149 +506,9 @@ void Parser::parseLOAD()
 	}
 }
 
-void Parser::parseADD()
-{
-	nextToken();
-	if (!expect(m_currentToken, asmc::TokenType::REGISTER))
-	{
-		return;
-	}
-
-	if (checkPeek(asmc::TokenType::REGISTER))
-	{
-		//m_output.push_back(0);
-
-		std::cout << "ADD rx[" << m_currentToken.m_text << "]:: ry[" << m_peekToken.m_text << "]\n";
-		
-
-		MemoryLayout ml;
-		ml.m_byteAmount = 2;
-		ml.m_ramIndex = m_ramLocation;
-		ml.m_opcode = 0x08;
-		ml.m_firstByte = std::stoi(m_currentToken.m_text);
-		ml.m_secondByte = std::stoi(m_peekToken.m_text);
-
-		//0000_0rrr
-		//00rr_r000
-		ml.m_firstByte = ml.m_firstByte << 3;
-		//00rr_rRRR
-		ml.m_firstByte = ml.m_firstByte | ml.m_secondByte;		
-
-		m_output.push_back(ml);
-
-		nextToken();
-		nextToken();//m_currentToken => nextNewToken
-
-		m_ramLocation += ml.m_byteAmount;
-	}
-	else if (checkPeek(asmc::TokenType::HEXNUMBER))
-	{
-		MemoryLayout ml;
-		ml.m_byteAmount = 3;
-		ml.m_ramIndex = m_ramLocation;
-		ml.m_opcode = 0x10;
-		ml.m_firstByte = std::stoi(m_currentToken.m_text);
-		ml.m_secondByte = std::stoi(m_peekToken.m_text);
-
-		
-
-		m_output.push_back(ml);
-
-		nextToken();
-		nextToken();//m_currentToken => nextNewToken
-
-		m_ramLocation += ml.m_byteAmount;
-	}
-
-}
-
-void Parser::parseSUB()
-{
-	nextToken();
-	if (!expect(m_currentToken, asmc::TokenType::REGISTER))
-	{
-		return;
-	}
-
-	if (checkPeek(asmc::TokenType::REGISTER))
-	{
-		//m_output.push_back(0);
-
-		std::cout << "SUB rx[" << m_currentToken.m_text << "]:: ry[" << m_peekToken.m_text << "]\n";
-
-		nextToken();//m_currentToken => 0xff
-		nextToken();//m_currentToken => nextNewToken
-	}
-	else if (checkPeek(asmc::TokenType::HEXNUMBER))
-	{
-		std::cout << "SUB rx[" << m_currentToken.m_text << "]:: hex[" << m_peekToken.m_text << "]\n";
-
-		MemoryLayout ml;
-		ml.m_byteAmount = 3;
-		ml.m_ramIndex = m_ramLocation;
-		ml.m_opcode = asmc::TokenType::SUB;
-		ml.m_firstByte = rdx::hexToDeC(m_currentToken.m_text);
-		ml.m_secondByte = rdx::hexToDeC(m_peekToken.m_text);
 
 
-		
 
-		m_output.push_back(ml);
-
-		nextToken();//m_currentToken => hexNumber
-		nextToken();//m_currentToken => nextNewToken
-
-		m_ramLocation += ml.m_byteAmount;
-	}
-}
-
-/*
-void Parser::parseJGZ()
-{
-	nextToken();
-	if (!expect(m_currentToken, asmc::TokenType::JUMPLOC))
-	{
-		return;
-	}
-
-	//is it forward declared label ?
-	if (!m_symbolTable.contains(m_currentToken.m_text))
-	{		
-		m_symbolTable[m_currentToken.m_text] = { m_ramLocation, LabelStatus::Undefined };
-//TODO push jgz location info with label? for second pass calc
-
-		m_jumpTable[m_currentToken.m_text] = 
-		{ 
-			.m_ramIndex = m_ramLocation, 
-			.m_opcode = asmc::TokenType::JGZ,
-			.m_firstByte = 0,
-			.m_secondByte = 0,
-			.m_byteAmount = 2 
-		};
-
-		m_ramLocation += 2;
-	}
-	else
-	{
-		m_symbolTable[m_currentToken.m_text].m_status = LabelStatus::Used;
-//TODO calc hex push it to std::vector
-		
-		MemoryLayout ml;
-		ml.m_byteAmount = 2;
-		ml.m_ramIndex = m_ramLocation;
-		ml.m_opcode = asmc::TokenType::JGZ;		
-		ml.m_firstByte = m_symbolTable[m_currentToken.m_text].m_ramIndex;
-
-		DEBUG_printMessage("hey [" + std::to_string(ml.m_firstByte) + "]");
-
-		m_output.push_back(ml);
-
-		m_ramLocation += ml.m_byteAmount;
-	}
-
-	nextToken();//m_currentToken => Label?
-}
-*/
 
 void Parser::parseSTR()
 {

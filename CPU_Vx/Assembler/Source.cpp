@@ -7,7 +7,8 @@
 #include "AssemblerV3/Lexer.h"
 #include "AssemblerV3/Parser.h"
 
-#include "LogisimRamPrinter.h"
+#include "Printers/LogisimRamPrinter.h"
+#include "Printers/BinaryRamPrinter.h"
 
 //asmc asm compiler
 int main()
@@ -29,7 +30,12 @@ int main()
 	LogisimRamPrinter lrp;
 	std::vector<int> a = p.getBinaryData();
 	lrp.run(a);
+
+	BinaryRamPrinter brp;
+	brp.run("program.bin", a);
 }
+
+//TODO .origin .db ve #define anahtarlarini ekle
 
 //HATALAR
 //ram adres sapmasi olursa gidip ramLocation i parseX altinda arttirmis olmalisin

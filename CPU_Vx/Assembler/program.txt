@@ -1,20 +1,25 @@
-LOAD r0,0x01 ;x = 1
-LOAD r1,0x01 ;y = 1
-LOAD r2,0x00 ;z = 0
+;2 + 20 + 54 + 6 = 84 hex(54)
+;84 / 4 = 21 hex15
 
-LOAD rf,0x05 ;i = 5
+ADD r0,0x02
+ADD r0,0x14
+ADD r0,0x36
+ADD r0,0x06
+
+;r0 = 0x54 dec84
+
+;6 / 2 = 3
+
+;-----------
+;6 - 2 = 4		1
+;4 - 2 = 2		2
+;2 - 2 = 0		3
+
 
 LOOP:
+	ADD rf,0x01		;bolum
 
-	MOV r3,r0  ;tempX = x :: x copy
-	
-	ADD r0,r1  ;z = x + y
-
-	MOV r2,r0  ;z = r0
-
-	MOV r1,r3  ;y = tempX
-	MOV r0,r2  ;x = z
-
-
-	SUB rf,0x01 ;i--
+	SUB r0,0x04		;84 - 4 ,80 - 4 ,76 - 4....,4 - 4
 	JGZ LOOP
+
+SUB rf,0x01
