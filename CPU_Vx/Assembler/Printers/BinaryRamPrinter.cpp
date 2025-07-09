@@ -8,7 +8,7 @@ BinaryRamPrinter::~BinaryRamPrinter()
 {
 }
 
-void BinaryRamPrinter::run(std::string path, std::vector<int>& binaryData)
+void BinaryRamPrinter::run(std::string path, std::vector<uint8_t>& binaryData)
 {
 	std::ofstream file(path, std::ios::binary);
 

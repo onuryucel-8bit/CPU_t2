@@ -19,8 +19,8 @@ using uchar = unsigned char;
 enum TokenType
 {
 
-	ENDOFLINE  = -1,
-	NEWLINE =0x53,
+	ENDOFLINE = -1,
+	NEWLINE = 0x53,
 
 	NUMBER = 0x54,
 	//IDENT,
@@ -35,11 +35,11 @@ enum TokenType
 	ADDRESS,
 
 	//Opcodes
-	LOAD = 0x01,	
+	LOAD = 0x01,
 	STR = 0x03,
 	MOV = 0x04,
 	OUT = 0x05,
-	
+
 
 	ADD = 0x08,
 	SUB = 0x09,
@@ -47,10 +47,11 @@ enum TokenType
 	SHR = 0x0b,
 
 	AND = 0x0c,
-	OR  = 0x0d,
+	OR = 0x0d,
 	NOT = 0x0e,
 	XOR = 0x0f,
-	
+
+	ADC = 0x18,
 
 	JMP = 0x20,
 	JZ  = 0x21,

@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <cstdint>
 
 #include "../utils/Radix.h"
 
@@ -12,7 +13,7 @@ public:
 	LogisimRamPrinter();
 	~LogisimRamPrinter();
 
-	void run(std::vector<int>& ramLayout);
+	void run(std::vector<uint8_t>& ramLayout);
 
 	
 private:

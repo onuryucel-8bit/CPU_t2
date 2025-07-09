@@ -8,7 +8,7 @@ LogisimRamPrinter::~LogisimRamPrinter()
 {
 }
 
-void LogisimRamPrinter::run(std::vector<int>& ramLayout)
+void LogisimRamPrinter::run(std::vector<uint8_t>& ramLayout)
 {
 	
 	std::string outpath = "outputRAM.txt";

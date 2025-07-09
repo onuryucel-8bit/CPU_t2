@@ -64,7 +64,7 @@ void PatlicanCpuEmu::run()
 
 		case OPCODE::LOAD:
 			LOAD0x1();
-			programCounter++;
+			
 			break;
 		case OPCODE::LOADa:
 			LOAD0x2();			
@@ -141,9 +141,10 @@ void PatlicanCpuEmu::run()
 			break;
 
 		}
-
+		programCounter++;
 	}
 	printRegs();
+
 }
 
 

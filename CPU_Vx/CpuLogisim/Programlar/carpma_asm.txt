@@ -1,0 +1,26 @@
+;04:07:2025 carpma
+
+;5 * 3 = 5 + 5 + 5
+;3 * 5 = 3 + 3 + 3 + 3 + 3
+
+;load r0, a
+;load r1, b
+
+;mov i,a
+;loop:
+;	add r2,b
+	
+;	sub i,1
+;	jgz loop
+;=================================;
+
+LOAD r0,0x05
+LOAD r1,0x03
+
+MOV rf,r0
+
+LOOP:
+	ADD r2,r1
+	
+	SUB rf,0x01
+	JGZ LOOP

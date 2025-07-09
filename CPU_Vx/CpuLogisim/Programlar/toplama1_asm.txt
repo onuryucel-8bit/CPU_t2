@@ -1,3 +1,4 @@
+;1+2+3+4+5
 LOAD r0,0x5    ;r0 = 5
 LOAD r1,0x0	   ;r1 = 0
 LOOP:

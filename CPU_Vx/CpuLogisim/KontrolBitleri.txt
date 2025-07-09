@@ -35,7 +35,7 @@ Sag Kontrol Bitleri - 6
 15 R7:REGFILE_we
 16 R8:REGFILE_out //regfile => anahat
 
-17 R9:!!BOS!!
+17 R9:Carry_in
 18 R10:OUT_we
 
 19 R11:TEMP_out //TEMP => data bus

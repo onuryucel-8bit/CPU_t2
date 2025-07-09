@@ -43,24 +43,29 @@ JUC	0010_0110	0x26
 
 uint8_t ram[256];
 
-void readFile(const std::string path)
+bool readFile(const std::string path)
 {
 	std::ifstream file(path, std::ios::binary);
 
 	if (!file)
 	{
 		std::cerr << "ERROR :: readFile() path is invalid\n";
-		return;
+		return false;
 	}
 
 	file.read((char*)ram, 256);
 	
 	file.close();
+
+	return true;
 }
 
 int main()
 {
-	readFile("program.bin");
+	if (!readFile("program.bin"))
+	{
+		return -1;
+	}
 
 	PatlicanCpuEmu emu(ram, 256);
 	emu.run();

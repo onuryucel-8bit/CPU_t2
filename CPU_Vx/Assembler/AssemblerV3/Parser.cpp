@@ -118,7 +118,7 @@ void Parser::program()
 	
 }
 
-std::vector<int> Parser::getBinaryData()
+std::vector<uint8_t> Parser::getBinaryData()
 {
 	return m_binaryProgram;
 }
@@ -158,6 +158,10 @@ void Parser::statement()
 	case asmc::TokenType::SHL:
 	case asmc::TokenType::SHR:
 		parseALUcommands();		
+		break;
+
+	case asmc::TokenType::ADC:
+		parseADC();
 		break;
 
 	case asmc::TokenType::NOT:
@@ -522,7 +526,17 @@ void Parser::parseSTR()
 
 	if (checkPeek(asmc::TokenType::REGISTER))
 	{
-		createMemoryLayout(3, opcode);
+		MemoryLayout ml;
+		ml.m_byteAmount = 3;
+		ml.m_ramIndex = m_ramLocation;
+		ml.m_opcode = opcode;
+
+		ml.m_firstByte = rdx::hexToDeC(m_peekToken.m_text);
+		ml.m_secondByte = rdx::hexToDeC(m_currentToken.m_text);
+				
+		m_output.push_back(ml);
+
+		m_ramLocation += ml.m_byteAmount;
 
 		nextToken();
 		nextToken();
@@ -555,6 +569,34 @@ void Parser::parseNOT()
 		//currenttoken => nextToken
 		//peek => nexttoken + 1
 		nextToken();		
+	}
+}
+
+void Parser::parseADC()
+{
+	int opcode = m_currentToken.m_type;
+
+	nextToken();//currentoken => rx
+	if (!expect(m_currentToken, asmc::TokenType::REGISTER))
+	{
+		return;
+	}
+
+	if (checkToken(asmc::TokenType::REGISTER))
+	{
+		MemoryLayout ml;
+		ml.m_byteAmount = 2;
+		ml.m_ramIndex = m_ramLocation;
+		ml.m_opcode = opcode;
+		ml.m_firstByte = rdx::hexToDeC(m_currentToken.m_text);
+
+		m_output.push_back(ml);
+
+		m_ramLocation += 2;
+
+		//currenttoken => nextToken
+		//peek => nexttoken + 1
+		nextToken();
 	}
 }
 

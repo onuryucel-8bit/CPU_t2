@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <cstdint>
 
 #include "../LibsLocal/magic_enum/magic_enum.hpp"
 #include "../LibsLocal/rang.hpp"
@@ -78,7 +79,7 @@ public:
 	//parser
 	void program();
 	
-	std::vector<int> getBinaryData();
+	std::vector<uint8_t> getBinaryData();
 
 	bool checkError();
 
@@ -123,7 +124,7 @@ private:
 	//cikti oncesi verinin tutuldugu vektor
 	std::vector<MemoryLayout> m_output;
 	//cikti
-	std::vector<int> m_binaryProgram;
+	std::vector<uint8_t> m_binaryProgram;
 
 	asmc::Lexer* m_lexer;
 
@@ -137,6 +138,7 @@ private:
 	void parseLOAD();	
 	void parseSTR();
 	void parseNOT();
+	void parseADC();
 };
 
 }

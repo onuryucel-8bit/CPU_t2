@@ -479,6 +479,46 @@ ADD 0x10 ADD rx,0x
 	
 }
 
+0x18
+ADC
+{
+	//200080
+	//111000
+	//20700
+	//108800
+	
+	//200080
+	table[MDR_out],
+	table[postaA_we],
+	
+	MDR => postaA	
+	
+	//111000
+	postaA_out,
+	REGFILE_out,
+	TEMP_we
+		
+	rx => TEMP
+	
+	
+	//20700
+	CARRY_in,
+	I3B,
+	ALUMUX_enb,
+	ACC_we
+		
+	elde => ALU_hat
+	elde + rx => ACC
+		
+	//108800
+	ALU_out,
+	REGFILE_we,
+	postaA_out,
+ 
+	ACC => rx
+	
+}
+
 //CALISIYOR 09.06.2025
 JMP 0x20
 {

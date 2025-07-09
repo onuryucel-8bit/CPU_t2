@@ -28,7 +28,7 @@ int main()
 	std::cout << std::dec << rang::bg::blue << "Sending the data to logisim printer..." << rang::style::reset << "\n";
 
 	LogisimRamPrinter lrp;
-	std::vector<int> a = p.getBinaryData();
+	std::vector<uint8_t> a = p.getBinaryData();
 	lrp.run(a);
 
 	BinaryRamPrinter brp;

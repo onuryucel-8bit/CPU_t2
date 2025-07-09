@@ -20,7 +20,7 @@ enum ControlBitNo
     ACC_we,
     ALUMUX_enb,
     ALU_out,
-    
+
     TEMP_we,
     //*******************
     IR_we,
@@ -28,15 +28,15 @@ enum ControlBitNo
     REGFILE_we,
     REGFILE_out,
 
-    CMP_out,
+    CARRY_in,
     OUT_we,
 
     TEMP_out,//TEMP => data bus
-    
+
     //Kontrol Birimi
     postaA_out,//19
     postaA_we,//20
-    
+
     postaB_out,//21
     postaB_we,//22
 
@@ -48,16 +48,18 @@ enum ControlBitNo
 //a00080
 std::vector<int> inputArray =
 {
+
+    CARRY_in,
+    I3B,
+    ALUMUX_enb,
+    ACC_we
     
-    MDR_out,
-	postaA_we,
-	postaB_we,
- 
+
 };
 
 void calcControlBits()
 {
-    
+
     int res = 0;
     for (size_t i = 0; i < inputArray.size(); i++)
     {
@@ -65,7 +67,7 @@ void calcControlBits()
     }
     std::cout << "hex : " << std::hex << res << "\n";
     //std::cout << std::dec;
-    
+
 }
 
 
