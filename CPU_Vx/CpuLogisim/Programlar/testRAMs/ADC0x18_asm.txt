@@ -1,0 +1,17 @@
+;taşma
+; 1111_1111
+; 0000_0001
+;+---------
+;1_(0000_0000) parantez icindeki r0 sonucu olur eger ki 1 ile toplanirsa
+
+; 1111_1111
+; 0000_0010
+;+---------
+;1_(0000_0001)
+
+
+LOAD r0,0xff ;r0 = 255
+LOAD r1,0x02 ;r1 = 2
+ADD r0,r1    ;r0 += r1 taşmadan dolayi r0 => 1 olur elde bayragi aktif olur
+ADC r1	     ;r1 icindeki 2 ile bayrak toplanir sonuc 3 olur
+STR @0f,r0   ;ram[0f] = 3

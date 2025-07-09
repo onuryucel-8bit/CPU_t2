@@ -17,8 +17,7 @@ void PatlicanCpuEmu::reset()
 
 	outReg = 0;
 
-	rx = 0;
-	ry = 0;
+	
 
 	currentOpcode = 0;
 }
@@ -28,7 +27,7 @@ void PatlicanCpuEmu::printRegs()
 	std::cout << "--------------Regs--------------\n";
 	for (size_t i = 0; i < 8; i++)
 	{
-		std::cout << "r :" << i << " | " << regs[i] << "\n";
+		std::cout << "r :" << i << " | " << (int)regs[i] << "\n";
 	}
 
 	std::cout << "-------------Out Reg--------------\n";
@@ -121,6 +120,10 @@ void PatlicanCpuEmu::run()
 			XOR0x17();
 			break;
 
+		case OPCODE::ADC:
+			ADC0x18();
+			break;
+
 		case OPCODE::JMP:
 			JMP0x20();
 			break;
@@ -157,7 +160,7 @@ void PatlicanCpuEmu::LOAD0x1()
 	//2.byte
 	programCounter++;
 	int byte = ram[programCounter];
-	rx = byte & 0x07;
+	int rx = byte & 0x07;
 
 	//3.byte
 	programCounter++;
@@ -173,7 +176,7 @@ void PatlicanCpuEmu::LOAD0x2()
 	//2.byte
 	programCounter++;
 	int secondByte = ram[programCounter];
-	rx = secondByte & 0x07;
+	int rx = secondByte & 0x07;
 
 	//3.byte	
 	programCounter++;
@@ -200,9 +203,9 @@ void PatlicanCpuEmu::MOV0x4()
 	programCounter++;
 	int byte = ram[programCounter];
 
-	rx = byte & 0x38;
+	int rx = byte & 0x38;
 	rx >>= 3;
-	ry = byte & 0x07;
+	int ry = byte & 0x07;
 
 	regs[rx] = regs[ry];
 }
@@ -234,8 +237,13 @@ void PatlicanCpuEmu::ADD0x8()
 	rx >>= 3;
 	int ry = regByte & 0x07;
 
-	regs[rx] = regs[rx] + regs[ry];
+	if (regs[rx] + regs[ry] > 255)
+	{
+		sumCarry = 1;
+	}
 
+	regs[rx] = regs[rx] + regs[ry];
+	
 	ACC = regs[rx];
 }
 
@@ -262,7 +270,7 @@ void PatlicanCpuEmu::SHL0xa()
 	rx >>= 3;
 	int shiftAmount = regByte & 0x07;
 
-	regs[rx] = regs[rx] << regs[ry];
+	regs[rx] = regs[rx] << shiftAmount;
 
 	ACC = regs[rx];
 }
@@ -276,7 +284,7 @@ void PatlicanCpuEmu::SHR0xb()
 	rx >>= 3;
 	int shiftAmount = regByte & 0x07;
 
-	regs[rx] = regs[rx] >> regs[ry];
+	regs[rx] = regs[rx] >> shiftAmount;
 
 	ACC = regs[rx];
 }
@@ -343,6 +351,11 @@ void PatlicanCpuEmu::ADD0x10()
 	programCounter++;
 	int number = ram[programCounter];
 
+	if (regs[rx] + number > 255)
+	{
+		sumCarry = 1;
+	}
+
 	regs[rx] = regs[rx] + number;
 
 	ACC = regs[rx];
@@ -396,6 +409,16 @@ void PatlicanCpuEmu::XOR0x17()
 	int number = ram[programCounter];
 
 	regs[rx] = regs[rx] ^ number;
+
+	ACC = regs[rx];
+}
+
+void PatlicanCpuEmu::ADC0x18()
+{
+	programCounter++;
+	int rx = ram[programCounter];
+
+	regs[rx] = regs[rx] + sumCarry;
 
 	ACC = regs[rx];
 }

@@ -31,6 +31,8 @@ enum OPCODE
 	ORs = 0x15,
 	XORs = 0x17,
 
+	ADC = 0x18,
+
 	JMP = 0x20,
 	JZ = 0x21,
 	JLZ = 0x22,
@@ -58,15 +60,14 @@ private:
 
 
 	int programCounter = 0;
-	int regs[8];
-	int outReg;
+	uint8_t regs[8];
+	uint8_t outReg;
 
-	int rx, ry;	
-	int currentOpcode;
+	uint8_t currentOpcode;
 
 	int sumCarry = 0;
 	int underflow = 0;
-	int ACC = 0;
+	uint8_t ACC = 0;
 	
 	void clearRegs();
 
@@ -94,6 +95,8 @@ private:
 	void AND0x14();
 	void OR0x15();
 	void XOR0x17();
+
+	void ADC0x18();
 	//--------------------------//
 
 	void JMP0x20();
