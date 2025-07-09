@@ -427,7 +427,7 @@ ADD 0x10 ADD rx,0x
 	111000
 	24
 	41
-	4700
+	4780
 	108800
 	*/
 	
@@ -439,9 +439,8 @@ ADD 0x10 ADD rx,0x
 	//mdr(rx) => postaA
 	
 	
-	//111000
-	postaA_out,
-	REGFILE_out,
+	//101000
+	postaA_out,	
 	TEMP_we
 	
 	regfile => tempReg
@@ -493,21 +492,20 @@ ADC
 	
 	MDR => postaA	
 	
-	//111000
+	//101000
 	postaA_out,
-	REGFILE_out,
 	TEMP_we
 		
 	rx => TEMP
 	
 	
-	//20700
+	//24700
 	CARRY_in,
 	I3B,
 	ALUMUX_enb,
-	ACC_we
-		
-	elde => ALU_hat
+	ACC_we,
+	REGPATH_in
+			
 	elde + rx => ACC
 		
 	//108800
