@@ -12,3 +12,5 @@
 - **M. Morris Mano** — *Computer System Architecture*
 - **David Harris, Sarah Harris** — *Digital Design and Computer Architecture*
 - **Hamacher, Vranesic, Zaky** — *Computer Organization*
+- **Charles Petzold** - *Code The Hidden Language of Computer Hardware and Software*
+- **Scott Clark J** - *But How Do It Know the Basic Principles of Computers for Everyone*
