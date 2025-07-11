@@ -1,0 +1,4 @@
+devpost.com/software/making-a-computer-to-play-bad-apple?
+BadApple :: https://www.youtube.com/watch?v=DpyAgNdl6oA
+EEPROM :: https://excess.org/bad-apple
+repo :: https://github.com/Timendus/chip-8-bad-apple
