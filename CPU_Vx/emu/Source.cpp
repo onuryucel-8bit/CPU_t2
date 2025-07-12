@@ -60,13 +60,30 @@ bool readFile(const std::string path)
 	return true;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-	if (!readFile("program.bin"))
+	std::string inputFile;
+	
+	if (argc == 1)
+	{
+		std::cout << "Running with default bin folder name[program.bin]... \n";
+		inputFile = "program.bin";
+		
+	}
+
+	if (argc >= 2)
+	{
+		inputFile = argv[1];
+	}
+
+
+	if (!readFile(inputFile))
 	{
 		return -1;
 	}
 
 	PatlicanCpuEmu emu(ram, 256);
 	emu.run();
+
+	return 0;
 }

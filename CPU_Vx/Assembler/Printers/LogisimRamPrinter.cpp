@@ -8,13 +8,13 @@ LogisimRamPrinter::~LogisimRamPrinter()
 {
 }
 
-void LogisimRamPrinter::run(std::vector<uint8_t>& ramLayout)
+void LogisimRamPrinter::run(std::string outputPath, std::vector<uint8_t>& ramLayout)
 {
 	
-	std::string outpath = "outputRAM.txt";
+	
 	
 	//std::ios_base::app
-	std::ofstream file(outpath);
+	std::ofstream file(outputPath);
 	if (!file.is_open())
 	{
 		std::cout << "error::main()::file\n";

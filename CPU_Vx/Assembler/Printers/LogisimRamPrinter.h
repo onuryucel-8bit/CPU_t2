@@ -13,7 +13,7 @@ public:
 	LogisimRamPrinter();
 	~LogisimRamPrinter();
 
-	void run(std::vector<uint8_t>& ramLayout);
+	void run(std::string outputPath, std::vector<uint8_t>& ramLayout);
 
 	
 private:

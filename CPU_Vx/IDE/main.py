@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter.font import Font
 
+import os
+
 root = tk.Tk()
 
 root.title("IDE CPU_t0")
@@ -20,10 +22,17 @@ def saveFile():
         file.write(source)
     
 
-def runFile():    
-    pass
+def runFile():
+    saveFile()
+    #arg1 input 
+    #arg2 output
+    os.system("AssemblerCPU_t2.exe program.txt out")
+    
 
 def runEmu():
+    saveFile()
+    #arg1 input     
+    os.system("PatlicanCPU.exe out.bin")
     pass
 
 def openFile():
@@ -36,6 +45,7 @@ def openFile():
 
 #run button
 runButton = tk.Button(root, text="Run", bg ="#5ff366")
+runButton.config(command= runFile)
 
 #save button
 saveButton = tk.Button(root, text="Save")
@@ -47,6 +57,7 @@ openButton.config(command=openFile)
 
 #runEMU button
 runEmuButton = tk.Button(root, text="RunEMU")
+runEmuButton.config(command=runEmu)
 
 #scale
 zoom_scale = tk.Scale(root, orient='vertical', from_=20, to=100)

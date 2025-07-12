@@ -11,10 +11,24 @@
 #include "Printers/BinaryRamPrinter.h"
 
 //asmc asm compiler
-int main()
+int main(int argc, char* argv[])
 {
+	std::string inputFile = "program.txt";
+	std::string outputFile = "output";
+
+	if (argc >= 2) 
+	{
+		inputFile = argv[1];
+	}
+	if (argc >= 3) 
+	{
+		outputFile = argv[2];
+	}
+
+	std::cout << "Running assembler cpu_t2....\n";
+
 	FileReader fr;
-	std::string program = fr.read("program.txt");
+	std::string program = fr.read(inputFile.c_str());
 
 	asmc::Lexer lexer(program);
 	asmc::Parser p(&lexer);
@@ -29,10 +43,12 @@ int main()
 
 	LogisimRamPrinter lrp;
 	std::vector<uint8_t> a = p.getBinaryData();
-	lrp.run(a);
+	lrp.run(outputFile + ".txt", a);
 
 	BinaryRamPrinter brp;
-	brp.run("program.bin", a);
+
+	
+	brp.run(outputFile + ".bin", a);
 }
 
 //TODO .origin .db ve #define anahtarlarini ekle
