@@ -7,6 +7,8 @@
 #include<cstdint>
 #include<string>
 #include<sstream>
+#include<algorithm>
+#include<cmath>
 
 namespace rdx {
 

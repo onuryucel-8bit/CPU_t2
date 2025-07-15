@@ -6,7 +6,7 @@
 #### [rj45 Creates](https://www.youtube.com/watch?v=FSVhlqE7EgA&list=PLilenfQGj6CEG6iZ4TQJ10PI7pCWsy1AO)
 #### [RossMcgowan](https://www.youtube.com/@RossMcgowanMaths)
 #### [CrashCourse/ComputerScience](https://www.youtube.com/watch?v=tpIctyqH29Q&list=PL8dPuuaLjXtNlUrzyH5r6jN9ulIgZBpdo)
-
+#### [Intermation](https://www.youtube.com/watch?v=2jfoLxQXq3Y&list=PLxfrSxK7P38X7XfG4X8Y9cdOURvC7ObMF)
 
 - **Albert Paul Malvino** — *Digital Computer Electronics*
 - **M. Morris Mano** — *Computer System Architecture*
