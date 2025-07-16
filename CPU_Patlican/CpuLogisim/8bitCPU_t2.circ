@@ -60,7 +60,7 @@
   <circuit name="main">
     <a name="circuit" val="main"/>
     <a name="circuitnamedboxfixedsize" val="true"/>
-    <a name="simulationFrequency" val="64.0"/>
+    <a name="simulationFrequency" val="2048000.0"/>
     <comp lib="0" loc="(1000,760)" name="Splitter">
       <a name="appear" val="center"/>
       <a name="facing" val="west"/>

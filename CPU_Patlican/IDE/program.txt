@@ -1,3 +1,1 @@
-LOAD r0,0x05
-LOAD r2,0x05
-ADD r2,r0
+LOAD r0,0xfa

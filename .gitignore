@@ -1,1 +1,4 @@
 .~lock.*#
+*.exe
+CPU_Patlican/IDE/*.bin
+CPU_Patlican/IDE/*.txt
