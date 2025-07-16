@@ -133,6 +133,8 @@ private:
 	//JMP,JGZ,JUC...
 	void parseJumpCommands();
 
+	void parseDB();
+	void parseORIGIN();
 	void parseOUT();
 	void parseMOV();
 	void parseLOAD();	

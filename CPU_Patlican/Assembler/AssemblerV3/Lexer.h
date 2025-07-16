@@ -20,14 +20,17 @@ enum TokenType
 {
 
 	ENDOFLINE = -1,
-	NEWLINE = 0x53,
 
-	NUMBER = 0x54,
+	ORIGIN = 0x52,	
+	DB,	//define byte			
+	NEWLINE,
+
+	NUMBER ,
 	//IDENT,
 	//STRING,
 
-	LABEL = 0x55,
-	JUMPLOC = 0x56,
+	LABEL ,
+	JUMPLOC ,
 
 	//Operands
 	REGISTER,

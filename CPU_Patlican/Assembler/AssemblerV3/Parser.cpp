@@ -132,6 +132,14 @@ void Parser::statement()
 {
 	switch (m_currentToken.m_type)
 	{
+	case asmc::TokenType::DB:
+		parseDB();
+		break;
+
+	case asmc::TokenType::ORIGIN:
+		parseORIGIN();		
+		break;
+
 	case asmc::TokenType::NEWLINE:
 		nextToken();
 		break;
@@ -201,9 +209,7 @@ void Parser::statement()
 		break;
 	default:
 		break;
-	}
-
-	//DEBUG_printMessage("ramLocation[" + std::to_string(m_ramLocation) +"]");
+	}	
 }
 
 void Parser::generateBinaryArr()
@@ -214,21 +220,22 @@ void Parser::generateBinaryArr()
 	{
 		int ramLocation = m_output[i].m_ramIndex;
 
-		m_binaryProgram[ramLocation] = m_output[i].m_opcode;
-		m_binaryProgram[ramLocation + 1] = m_output[i].m_firstByte;
+		m_binaryProgram[ramLocation] = m_output[i].m_opcode;		
 
-		if (m_output[i].m_byteAmount == 3)
+		switch (m_output[i].m_byteAmount)
 		{
+		
+		case 2:			
+			m_binaryProgram[ramLocation + 1] = m_output[i].m_firstByte;
+			break;
+
+		case 3:						
+			m_binaryProgram[ramLocation + 1] = m_output[i].m_firstByte;
 			m_binaryProgram[ramLocation + 2] = m_output[i].m_secondByte;
-		}
+			break;
+		}		
 	}
-	/*std::cout << "HEY!!!\n";
 	
-	for (size_t i = 0; i < m_binaryProgram.size(); i++)
-	{
-		std::cout << std::hex << m_binaryProgram[i] << "\n";
-	}
-	std::cout << std::dec;*/
 }
 //------------------------------------------------------------------------//
 //-----------------------PRINT--------------------------------------------//
@@ -527,10 +534,6 @@ void Parser::parseLOAD()
 	}
 }
 
-
-
-
-
 void Parser::parseSTR()
 {
 	int opcode = m_currentToken.m_type;
@@ -615,6 +618,50 @@ void Parser::parseADC()
 		//peek => nexttoken + 1
 		nextToken();
 	}
+}
+
+void Parser::parseORIGIN()
+{
+	nextToken();
+	if (!expect(m_currentToken, asmc::TokenType::HEXNUMBER))
+	{
+		return;
+	}
+
+	m_ramLocation = rdx::hexToDeC(m_currentToken.m_text);
+	nextToken();
+}
+
+void Parser::parseDB()
+{
+	nextToken();
+	if (!expect(m_currentToken, asmc::TokenType::HEXNUMBER))
+	{
+		return;
+	}
+
+	while(true)
+	{
+		MemoryLayout ml;
+		ml.m_byteAmount = 1;
+		ml.m_ramIndex = m_ramLocation;
+		ml.m_opcode = rdx::hexToDeC(m_currentToken.m_text);
+
+		m_output.push_back(ml);
+
+		m_ramLocation += 1;
+
+		if (!checkPeek(asmc::TokenType::HEXNUMBER))
+		{
+			break;
+		}
+
+		nextToken();
+
+	}
+	
+	nextToken();
+
 }
 
 }

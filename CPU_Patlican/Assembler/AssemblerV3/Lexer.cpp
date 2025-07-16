@@ -23,10 +23,36 @@ Token Lexer::getToken()
 	
 
 	Token token;
-	
 
+	//TODO origin db
+
+	//.origin .db
+	if (m_currentChar == '.')
+	{
+		int startPos = m_position + 1;
+		int length = 0;
+		while (std::isalpha(peek()))
+		{
+			nextChar();
+			length++;
+		}
+
+		std::string tokenStr = m_program.substr(startPos, length);
+	
+		if (checkIfKeyword(tokenStr))
+		{
+			std::optional<TokenType> enumVal = magic_enum::enum_cast<TokenType>(tokenStr);
+			token = { tokenStr, enumVal.value() };
+		}
+		else
+		{
+			f_error = true;
+		}
+
+		f_newline = false;
+	}
 	//var/macro,keyword or operand check
-	if (std::isalpha(m_currentChar))
+	else if (std::isalpha(m_currentChar))
 	{
 		//Register?
 		if (isOperand())
@@ -213,10 +239,9 @@ char Lexer::peekOverX()
 
 bool Lexer::checkIfKeyword(std::string token)
 {
-	std::optional<TokenType> colorName = magic_enum::enum_cast<TokenType>(token);
-	if (colorName.has_value())
-	{
-		//std::cout << colorName.value() << "\n";
+	std::optional<TokenType> tempToken = magic_enum::enum_cast<TokenType>(token);
+	if (tempToken.has_value())
+	{		
 		return true;
 	}
 
