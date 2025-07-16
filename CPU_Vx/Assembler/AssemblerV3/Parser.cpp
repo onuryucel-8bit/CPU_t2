@@ -399,29 +399,48 @@ void Parser::parseJumpCommands()
 
 void Parser::parseOUT()
 {
+
+	int opcode = m_currentToken.m_type;
+
 	nextToken();//m_currentToken => rx
 	if (!expect(m_currentToken, asmc::TokenType::REGISTER))
 	{
 		return;
 	}
 
-	if (checkPeek(asmc::TokenType::REGISTER))
+	if (checkToken(asmc::TokenType::REGISTER))
 	{
-		createMemoryLayout(2, 0x05);
+		MemoryLayout ml;
+		ml.m_byteAmount = 2;
+		ml.m_ramIndex = m_ramLocation;
+		ml.m_opcode = opcode;
+		ml.m_firstByte = rdx::hexToDeC(m_currentToken.m_text);
+
+		m_output.push_back(ml);
+
+		m_ramLocation += ml.m_byteAmount;
 
 		nextToken();//m_currentToken => 0xff
 		nextToken();//m_currentToken => nextNewToken
 	}
-	else if (checkPeek(asmc::TokenType::ADDRESS))
+	else if (checkToken(asmc::TokenType::ADDRESS))
 	{
-		createMemoryLayout(2, 0x06);
+		MemoryLayout ml;
+		ml.m_byteAmount = 2;
+		ml.m_ramIndex = m_ramLocation;
+		ml.m_opcode = opcode;
+		ml.m_firstByte = rdx::hexToDeC(m_currentToken.m_text);
+
+		m_output.push_back(ml);
+
+		m_ramLocation += ml.m_byteAmount;
 
 		nextToken();//m_currentToken => 0xff
 		nextToken();//m_currentToken => nextNewToken
 	}
 	else
 	{
-		printError("OUT :: unexpected ls");
+		printError("OUT :: unexpected token");
 	}
 
 }
