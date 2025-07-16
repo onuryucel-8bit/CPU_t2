@@ -1,0 +1,17 @@
+;cikti birimine "patlican" yazisini yazdirir
+LOAD r0,0x70 ;p
+OUT r0
+LOAD r0,0x61 ;a
+OUT r0
+LOAD r0,0x74 ;t
+OUT r0
+LOAD r0,0x6c ;l
+OUT r0
+LOAD r0,0x69 ;i
+OUT r0
+LOAD r0,0x63 ;c
+OUT r0
+LOAD r0,0x61 ;a
+OUT r0
+LOAD r0,0x6e ;n
+OUT r0
