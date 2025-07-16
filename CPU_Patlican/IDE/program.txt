@@ -1,1 +1,0 @@
-LOAD r0,0xfa
