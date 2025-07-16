@@ -1,2 +1,4 @@
 https://medium.com/@harindu973/how-computer-deal-with-floating-point-numbers-1f345ab65b72
 https://www.youtube.com/watch?v=PZRI1IfStY0
+How do Floating Point Numbers Work? :: https://www.youtube.com/watch?v=lUdRbZDBgEE
+How Floating-Point Numbers Are Represented :: https://www.youtube.com/watch?v=bbkcEiUjehk&t=10s
