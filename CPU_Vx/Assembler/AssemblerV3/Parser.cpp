@@ -400,8 +400,6 @@ void Parser::parseJumpCommands()
 void Parser::parseOUT()
 {
 
-	int opcode = m_currentToken.m_type;
-
 	nextToken();//m_currentToken => rx
 	if (!expect(m_currentToken, asmc::TokenType::REGISTER))
 	{
@@ -413,7 +411,7 @@ void Parser::parseOUT()
 		MemoryLayout ml;
 		ml.m_byteAmount = 2;
 		ml.m_ramIndex = m_ramLocation;
-		ml.m_opcode = opcode;
+		ml.m_opcode = 0x5;
 		ml.m_firstByte = rdx::hexToDeC(m_currentToken.m_text);
 
 		m_output.push_back(ml);
@@ -428,7 +426,7 @@ void Parser::parseOUT()
 		MemoryLayout ml;
 		ml.m_byteAmount = 2;
 		ml.m_ramIndex = m_ramLocation;
-		ml.m_opcode = opcode;
+		ml.m_opcode = 0x6;
 		ml.m_firstByte = rdx::hexToDeC(m_currentToken.m_text);
 
 		m_output.push_back(ml);
