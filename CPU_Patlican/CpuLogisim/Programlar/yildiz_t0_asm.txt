@@ -1,0 +1,21 @@
+.ORIGIN 0xfe
+.DB 0x2a
+.DB 0x0a
+
+.ORIGIN 0x00
+
+LOAD r0,0x10
+
+LOOPOUT:
+MOV r1,r0
+	LOOPPRINT:
+
+	OUT @fe
+
+	SUB r1,0x01
+	JGZ LOOPPRINT
+
+OUT @ff
+
+SUB r0,0x01
+JGZ LOOPOUT

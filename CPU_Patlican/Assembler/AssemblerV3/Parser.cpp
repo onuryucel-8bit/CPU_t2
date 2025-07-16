@@ -408,10 +408,7 @@ void Parser::parseOUT()
 {
 
 	nextToken();//m_currentToken => rx
-	if (!expect(m_currentToken, asmc::TokenType::REGISTER))
-	{
-		return;
-	}
+	
 
 	if (checkToken(asmc::TokenType::REGISTER))
 	{
