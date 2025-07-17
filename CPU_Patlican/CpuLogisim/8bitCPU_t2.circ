@@ -2414,8 +2414,8 @@
       <a name="contents">addr/data: 8 8
 ff 5 3f 10 16 1a 1d 0
 22 22 2b 2b 22 22 27 22
-5*30 0 0 0 3a 7*0 4*37 0
-37 37
+30 30 0 0 30 30 0 30
+3a 7*0 4*37 0 37 37
 </a>
     </comp>
     <comp lib="4" loc="(750,1180)" name="Counter">
