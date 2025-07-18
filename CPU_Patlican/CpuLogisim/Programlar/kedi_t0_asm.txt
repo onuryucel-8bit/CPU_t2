@@ -14,18 +14,24 @@
 ;(  28
 ;)  29
 ;^  5e
-
+;
+;	int arr[28]
+;	for(int i = 0; i < 28; i++)
+;		print(arr[i]
+;
+;
 .ORIGIN 0x00
 
-LOAD r0,0x1c ;i = 109  ;3byte
+LOAD r0,0x1c ;i = 109
+LOAD r1,0xe3 ;pos = 0xe3
+
 LOOP:
-	OUT @E3
+
+	OUT @r1	
 	
-	LOAD r1,@04
-	ADD r1,0x01
-	STR @04,r1	   ;ram[0x04] => @E3++
-	
-	SUB r0,0x01
+	ADD r1,0x01 ; pos++
+		
+	SUB r0,0x01 ; i--
 	JGZ LOOP
 
 
