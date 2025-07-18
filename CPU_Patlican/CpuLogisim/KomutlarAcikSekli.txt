@@ -173,7 +173,9 @@ STR 0x03
 	table[MDR_out],
 	table[postaA_we],
 	MDR => postaA
-		
+	
+	
+	
 	//3. bayti goster
 	//24
 	PC_enb,	
@@ -181,6 +183,8 @@ STR 0x03
 	
 	PC => MAR
 	PC++//sonraki komutu goster
+	
+	
 	
 	//41 3. bayti al
 	ram_out
@@ -611,7 +615,6 @@ OUT @rx
 	//op - rx 2byte
 	
 	//200080	mdr => postaA
-	//24		pc++
 	//2110000	rx => adresReg
 	//1000020   adresReg => MAR
 	//41		ram => MDR	
@@ -623,14 +626,6 @@ OUT @rx
 	
 	MDR => postaA
 	
-	//Adresi goster
-	//24
-	PC_enb,	
-	MDR_we
-	
-	PC => MAR
-	PC++//sonraki komutu goster
-	
 	//2110000
 	postaA_out,
 	REGFILE_out,
@@ -640,6 +635,7 @@ OUT @rx
 	
 	//1000020
 	adrReg_out,
+	MUX_enb,
 	MAR_we
 	
 	adresReg => MAR

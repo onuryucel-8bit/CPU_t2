@@ -1,0 +1,9 @@
+.ORIGIN 0x00
+LOAD r1,0xff
+LOAD r2,0xab
+
+OUT @r1 ;prints 'a'
+
+.ORIGIN 0xff
+.DB 0x41 ;'a'
+

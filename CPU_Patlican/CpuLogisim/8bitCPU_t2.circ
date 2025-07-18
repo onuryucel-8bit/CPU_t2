@@ -60,7 +60,7 @@
   <circuit name="main">
     <a name="circuit" val="main"/>
     <a name="circuitnamedboxfixedsize" val="true"/>
-    <a name="simulationFrequency" val="1.0"/>
+    <a name="simulationFrequency" val="4.0"/>
     <comp lib="0" loc="(1000,780)" name="Splitter">
       <a name="fanout" val="8"/>
       <a name="incoming" val="8"/>
@@ -1031,6 +1031,11 @@
       <a name="scale" val="8"/>
       <a name="width" val="32"/>
     </comp>
+    <comp lib="5" loc="(600,1890)" name="LED">
+      <a name="color" val="#b6ff00"/>
+      <a name="label" val="OUT_0x07"/>
+      <a name="offcolor" val="#000000"/>
+    </comp>
     <comp lib="5" loc="(630,1690)" name="LED">
       <a name="color" val="#b6ff00"/>
       <a name="label" val="HLT_0x0"/>
@@ -1136,7 +1141,7 @@
       <a name="label" val="ADC_0x18"/>
       <a name="offcolor" val="#000000"/>
     </comp>
-    <comp lib="5" loc="(630,2510)" name="LED">
+    <comp lib="5" loc="(630,2540)" name="LED">
       <a name="color" val="#b6ff00"/>
       <a name="label" val="JMP_0x20"/>
       <a name="offcolor" val="#000000"/>
@@ -1213,16 +1218,16 @@
     <comp lib="8" loc="(2000,875)" name="Text">
       <a name="text" val="ROM_Counter"/>
     </comp>
-    <comp lib="8" loc="(2133,3310)" name="Text">
+    <comp lib="8" loc="(2130,3310)" name="Text">
       <a name="text" val="BackSpace: 1000 0x8"/>
     </comp>
-    <comp lib="8" loc="(2135,3281)" name="Text">
+    <comp lib="8" loc="(2135,3280)" name="Text">
       <a name="text" val="LINE FEED: 1010 0xA"/>
     </comp>
     <comp lib="8" loc="(2140,875)" name="Text">
       <a name="text" val="ringCounter"/>
     </comp>
-    <comp lib="8" loc="(2225,114)" name="Text">
+    <comp lib="8" loc="(2225,110)" name="Text">
       <a name="text" val="kedi_t0_asm 1690 tik"/>
     </comp>
     <comp lib="8" loc="(2230,1635)" name="Text">
@@ -1865,6 +1870,8 @@
     <wire from="(3260,4600)" to="(3400,4600)"/>
     <wire from="(3270,1910)" to="(3270,2130)"/>
     <wire from="(3270,2130)" to="(3350,2130)"/>
+    <wire from="(330,1650)" to="(330,1890)"/>
+    <wire from="(330,1890)" to="(600,1890)"/>
     <wire from="(330,2340)" to="(330,2400)"/>
     <wire from="(330,2340)" to="(350,2340)"/>
     <wire from="(3300,2070)" to="(3300,2510)"/>
@@ -1910,8 +1917,8 @@
     <wire from="(400,2130)" to="(630,2130)"/>
     <wire from="(410,1650)" to="(410,2160)"/>
     <wire from="(410,2160)" to="(630,2160)"/>
-    <wire from="(410,2330)" to="(410,2510)"/>
-    <wire from="(410,2510)" to="(630,2510)"/>
+    <wire from="(410,2330)" to="(410,2540)"/>
+    <wire from="(410,2540)" to="(630,2540)"/>
     <wire from="(420,1650)" to="(420,2230)"/>
     <wire from="(420,2230)" to="(630,2230)"/>
     <wire from="(430,1650)" to="(430,2260)"/>
@@ -2694,7 +2701,8 @@
 411000 400700 408800 2a00000 200080 101000 24 41
 4780 108800 2a00000 2000080 1000008 2a00000 200080 101000
 24700 108800 2a00000 200080 24 41 2000080 1000030
-41 108080 2a00000
+41 108080 2a00000 200080 2110000 1000030 41 40080
+2a00000
 </a>
       <a name="dataWidth" val="26"/>
     </comp>
@@ -2715,7 +2723,7 @@
     <comp lib="4" loc="(300,1470)" name="ROM">
       <a name="appearance" val="classic"/>
       <a name="contents">addr/data: 8 8
-ff 5 3f 10 16 1a 1d 0
+ff 5 3f 10 16 1a 1d 47
 22 22 2b 2b 22 22 27 22
 30 30 0 0 30 30 0 30
 3a 7*0 4*37 0 37 37
