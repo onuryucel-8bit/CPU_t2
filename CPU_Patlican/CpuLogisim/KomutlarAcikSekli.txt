@@ -604,3 +604,56 @@ JUC
 		//adresReg => PC
 	}
 }
+
+
+OUT @rx
+{
+	//op - rx 2byte
+	
+	//200080	mdr => postaA
+	//24		pc++
+	//2110000	rx => adresReg
+	//1000020   adresReg => MAR
+	//41		ram => MDR	
+	//40080		MDR => OUT
+	
+	//200080
+	MDR_out,
+	postaA_we,
+	
+	MDR => postaA
+	
+	//Adresi goster
+	//24
+	PC_enb,	
+	MDR_we
+	
+	PC => MAR
+	PC++//sonraki komutu goster
+	
+	//2110000
+	postaA_out,
+	REGFILE_out,
+	adrReg_we
+	
+	rx => adresReg
+	
+	//1000020
+	adrReg_out,
+	MAR_we
+	
+	adresReg => MAR
+	
+	//41
+	RAM_out,
+	MDR_we
+	
+	RAM => MDR
+	
+	//40080
+	MDR_out,
+	OUT_we
+	
+	MDR => OUT_reg
+
+}

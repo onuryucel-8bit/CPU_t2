@@ -22,8 +22,10 @@ enum TokenType
 	ENDOFLINE = -1,
 
 	ORIGIN = 0x52,	
-	DB,	//define byte			
-	NEWLINE,
+	DB,	//define byte
+	DEFINE,	
+	VARNAME,
+	NEWLINE,	
 
 	NUMBER ,
 	//IDENT,
@@ -36,6 +38,7 @@ enum TokenType
 	REGISTER,
 	HEXNUMBER,
 	ADDRESS,
+	REGADR,
 
 	//Opcodes
 	LOAD = 0x01,

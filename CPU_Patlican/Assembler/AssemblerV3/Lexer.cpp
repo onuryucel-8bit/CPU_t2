@@ -184,17 +184,31 @@ Token Lexer::getToken()
 			
 			//ADDRESS
 		case '@':
-			nextChar();//move cursor to number
-			startPos = m_position;
-			length = 1;
-			while (std::isxdigit(peek()))
+			//OUT rx, OUT @fa, OUT @rx
+
+			nextChar();//move cursor to number OR r
+
+			//OUT @rx
+			if (m_currentChar == 'r')
 			{
 				nextChar();
-				length++;
+				token = { std::string(1, m_currentChar), asmc::TokenType::REGADR };
+			}
+			else 
+			{
+				startPos = m_position;
+				length = 1;
+				while (std::isxdigit(peek()))
+				{
+					nextChar();
+					length++;
+				}
+
+				tokenStr = m_program.substr(startPos, length);
+				token = { tokenStr, asmc::TokenType::ADDRESS };
 			}
 
-			tokenStr = m_program.substr(startPos, length);
-			token = { tokenStr, asmc::TokenType::ADDRESS };
+
 
 			break;
 

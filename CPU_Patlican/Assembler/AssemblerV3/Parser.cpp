@@ -3,6 +3,7 @@
 namespace asmc
 {
 
+//TODO put lexer inside of parser as a member
 Parser::Parser(asmc::Lexer* lexer)
 {
 	m_lexer = lexer;
@@ -66,7 +67,7 @@ void Parser::secondPass()
 	
 }
 
-bool Parser::checkToken(asmc::TokenType type)
+bool Parser::checkCurrentToken(asmc::TokenType type)
 {
 	return type == m_currentToken.m_type;
 }
@@ -132,6 +133,11 @@ void Parser::statement()
 {
 	switch (m_currentToken.m_type)
 	{
+
+	case asmc::TokenType::DEFINE:
+		parseDEFINE();
+		break;
+
 	case asmc::TokenType::DB:
 		parseDB();
 		break;
@@ -410,7 +416,7 @@ void Parser::parseOUT()
 	nextToken();//m_currentToken => rx
 	
 
-	if (checkToken(asmc::TokenType::REGISTER))
+	if (checkCurrentToken(asmc::TokenType::REGISTER))
 	{
 		MemoryLayout ml;
 		ml.m_byteAmount = 2;
@@ -422,10 +428,10 @@ void Parser::parseOUT()
 
 		m_ramLocation += ml.m_byteAmount;
 
-		nextToken();//m_currentToken => 0xff
+		nextToken();
 		nextToken();//m_currentToken => nextNewToken
 	}
-	else if (checkToken(asmc::TokenType::ADDRESS))
+	else if (checkCurrentToken(asmc::TokenType::ADDRESS))
 	{
 		MemoryLayout ml;
 		ml.m_byteAmount = 2;
@@ -437,7 +443,22 @@ void Parser::parseOUT()
 
 		m_ramLocation += ml.m_byteAmount;
 
-		nextToken();//m_currentToken => 0xff
+		nextToken();
+		nextToken();//m_currentToken => nextNewToken
+	}
+	else if (checkCurrentToken(asmc::TokenType::REGADR))
+	{
+		MemoryLayout ml;
+		ml.m_byteAmount = 2;
+		ml.m_ramIndex = m_ramLocation;
+		ml.m_opcode = 0x7;
+		ml.m_firstByte = rdx::hexToDeC(m_currentToken.m_text);
+		
+		m_output.push_back(ml);
+
+		m_ramLocation += ml.m_byteAmount;
+
+		nextToken();
 		nextToken();//m_currentToken => nextNewToken
 	}
 	else
@@ -571,7 +592,7 @@ void Parser::parseNOT()
 		return;
 	}
 
-	if (checkToken(asmc::TokenType::REGISTER))
+	if (checkCurrentToken(asmc::TokenType::REGISTER))
 	{
 		MemoryLayout ml;
 		ml.m_byteAmount = 2;
@@ -599,7 +620,7 @@ void Parser::parseADC()
 		return;
 	}
 
-	if (checkToken(asmc::TokenType::REGISTER))
+	if (checkCurrentToken(asmc::TokenType::REGISTER))
 	{
 		MemoryLayout ml;
 		ml.m_byteAmount = 2;
@@ -660,5 +681,11 @@ void Parser::parseDB()
 	nextToken();
 
 }
+
+void Parser::parseDEFINE()
+{
+	//#DEFINE <VARNAME> <HEX>
+}
+
 
 }

@@ -87,7 +87,7 @@ private:
 
 	void secondPass();
 
-	bool checkToken(asmc::TokenType type);
+	bool checkCurrentToken(asmc::TokenType type);
 	bool checkPeek(asmc::TokenType type);
 
 	void nextToken();	
@@ -133,6 +133,7 @@ private:
 	//JMP,JGZ,JUC...
 	void parseJumpCommands();
 
+	void parseDEFINE();
 	void parseDB();
 	void parseORIGIN();
 	void parseOUT();
