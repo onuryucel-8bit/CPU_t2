@@ -2,3 +2,5 @@ https://medium.com/@harindu973/how-computer-deal-with-floating-point-numbers-1f3
 https://www.youtube.com/watch?v=PZRI1IfStY0
 How do Floating Point Numbers Work? :: https://www.youtube.com/watch?v=lUdRbZDBgEE
 How Floating-Point Numbers Are Represented :: https://www.youtube.com/watch?v=bbkcEiUjehk&t=10s
+Why 0.1 + 0.2 === 0.30...Implementing IEEE 754 in JS :: https://www.youtube.com/watch?v=wPBjd-vb9eI
+Wait, so comparisons in floating point only just KINDA work? What DOES work? :: https://www.youtube.com/watch?v=Oo89kOv9pVk

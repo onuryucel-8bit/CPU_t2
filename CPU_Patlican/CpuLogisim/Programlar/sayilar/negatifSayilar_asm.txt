@@ -1,0 +1,25 @@
+;~A + 1 
+; 2: 0000_0010
+
+;~A: 1111_1101
+; 1: 0000_0001
+;-2: 1111_1110 FE
+
+;2 - (-2) = 4
+LOAD r0,0x02 ;pozitif 2
+LOAD r1,0xfe ;negatif 2
+
+SUB r0,r1
+
+ADD r0,0x30 ;~toChar(r0)
+OUT r0
+
+LOAD r2,0x0a ;lineFeed
+OUT r2
+
+;-5 - (-2)
+LOAD r0,0xfb ;-5
+LOAD r1,0xfe ;-2
+
+SUB r0,r1
+

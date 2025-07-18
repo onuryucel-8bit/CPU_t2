@@ -64,10 +64,10 @@ zoom_scale = tk.Scale(root, orient='vertical', from_=20, to=100)
 zoom_scale.config(command=zoom)
 
 #textbox
-textbox = tk.Text(root, font=font, width=200, height=200, bg="#b17474")
+textbox = tk.Text(root, font=font, bg="#b17474", undo=True)
 
 zoom_scale.pack(fill='y', side='right')
-textbox.place(x=0, y=40, width=500, height=600)
+textbox.place(x=0, y=40, width=900, height=680)
 
 runButton.place(x=0, y=0, width= 80, height= 40)
 saveButton.place(x=80, y=0, width= 80, height= 40)
@@ -77,6 +77,6 @@ openButton.place(x=160 + 80, y=0, width= 80, height= 40)
 
 
 
-zoom_scale.set(30)
+zoom_scale.set(10)
 
 root.mainloop()
