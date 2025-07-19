@@ -19,12 +19,8 @@ Token Lexer::getToken()
 	skipWhiteSpace();
 	skipComments();
 	skipNonEssential();
-
 	
-
 	Token token;
-
-	//TODO origin db
 
 	//.origin .db
 	if (m_currentChar == '.')
@@ -92,22 +88,9 @@ Token Lexer::getToken()
 		if (isOperand())
 		{			
 			token = lexHexNumberPart();
-		}
-		//TODO NUMBER dec takes dec converts to hex sends token to parser		
+		}			
 		else
-		{
-			/*
-			int startPos = m_position;
-			int length = 1;
-			while (std::isdigit(peek()))
-			{
-				nextChar();
-				length++;
-			}
-
-			std::string tokenStr = m_program.substr(startPos, length);
-			token = { tokenStr, asmc::TokenType::NUMBER };
-			*/
+		{			
 			f_error = true;
 
 		}
@@ -188,9 +171,11 @@ asmc::Token Lexer::lexRegPart()
 	nextChar();
 	if (isxdigit(static_cast<uint8_t>(peek())))
 	{
-		std::cout << "ERROR invalid reg operand it should be 4bit\n";
+		std::cout << "ERROR invalid reg operand it should be r[0-7]\n";
 		return EMPTY_TOKEN;
 	}
+
+	
 	return { std::string(1,m_currentChar), TokenType::REGISTER };
 }
 
@@ -287,7 +272,7 @@ bool Lexer::isOperand()
 {
 	//isxdigit() checks next char is it hex?
 	//register ?
-	if (m_currentChar == 'r' && std::isxdigit(static_cast<uint8_t>(peek())))
+	if (m_currentChar == 'r' && std::isdigit(static_cast<uint8_t>(peek())))
 	{
 		return true;
 	}
@@ -326,7 +311,6 @@ void Lexer::skipWhiteSpace()
 //skip ',' '\n'
 void Lexer::skipNonEssential()
 {
-//POT_ERROR while 
 	while (m_currentChar == ',' || m_currentChar == '\t')
 	{
 		if (m_currentChar == '\n')

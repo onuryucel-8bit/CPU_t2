@@ -1,7 +1,5 @@
 #include <iostream>
 
-//-------------------parser-----------------------//
-
 #include "Fileio/FileReader.h"
 
 #include "AssemblerV3/Lexer.h"
@@ -12,7 +10,7 @@
 
 //asmc asm compiler
 int main(int argc, char* argv[])
-{
+{	
 	std::string inputFile = "program.txt";
 	std::string outputFile = "output";
 
@@ -25,13 +23,12 @@ int main(int argc, char* argv[])
 		outputFile = argv[2];
 	}
 
-	std::cout << "Running assembler cpu_t2....\n";
+	std::cout << "Running assembler cpu_t2 Patlican 19.07.25 ....\n";
 
 	FileReader fr;
 	std::string program = fr.read(inputFile.c_str());
-
-	asmc::Lexer lexer(program);
-	asmc::Parser p(&lexer);
+	
+	asmc::Parser p(program);
 	p.program();
 
 
@@ -51,59 +48,15 @@ int main(int argc, char* argv[])
 	brp.run(outputFile + ".bin", a);
 }
 
-//TODO #define anahtarlarini ekle
 
 //HATALAR
 //ram adres sapmasi olursa gidip ramLocation i parseX altinda arttirmis olmalisin
 
-/*
-
-SHR
-SHL
-XOR
-OR
-
-AND
-NOT
-ADD
-SUB
-
-STR
-LOAD
-MOV
-SUB
-JGZ-jumps
-
-
-*/
-
-
 //TODO hata sistemini iyilestir
 //TODO m_lineNumber nokta atisi hatanin oldugu satiri gostersin
 
-
-/*V0.2
-<program> ::= <statement>
-<statement> ::= <opcode> ((<register> | <address>) | (<register> | <address> | <hex>)?)
-<opcode> ::= "LOAD" | "ADD" | "STR" | "JMP" | ....
-<hex> ::= 0x[0-f]+
-<address> ::= @[0-f]+
-<register> ::= r[0-f]
-*/
-
-
-/*V0.1
-<program> ::= <statement>
-<statement> ::= <opcode> <register>
-
-<opcode> ::= "LOAD" | "ADD"
-<register> ::= "r" <hex1>
-<hex1> ::= [0-9]
-*/
-
-
 /*
-
+Yazim ornekleri
 
 !hatali yazim
 LOOP:

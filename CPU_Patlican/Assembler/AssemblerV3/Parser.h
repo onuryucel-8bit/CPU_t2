@@ -12,8 +12,6 @@
 
 #include "Lexer.h"
 
-//TODO bazi kisimlarda regex kullanilabilir
-
 namespace asmc
 {
 
@@ -74,7 +72,7 @@ class Parser
 {
 public:
 	
-	Parser(asmc::Lexer* lexer);
+	Parser(std::string& program);
 
 	//parser
 	void program();
@@ -131,7 +129,7 @@ private:
 	//cikti
 	std::vector<uint8_t> m_binaryProgram;
 
-	asmc::Lexer* m_lexer;
+	asmc::Lexer m_lexer;
 
 	//ADD,SUB,AND...
 	void parseALUcommands();

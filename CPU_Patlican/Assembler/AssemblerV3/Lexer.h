@@ -14,8 +14,6 @@
 namespace asmc
 {
 
-//TODO std icinde bunun tanimi olmasi lazim onu kullan
-
 enum TokenType
 {
 

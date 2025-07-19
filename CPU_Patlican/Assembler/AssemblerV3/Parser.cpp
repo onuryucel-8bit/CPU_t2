@@ -4,22 +4,23 @@ namespace asmc
 {
 
 //TODO put lexer inside of parser as a member
-Parser::Parser(asmc::Lexer* lexer)
+Parser::Parser(std::string& program)
+	: m_lexer(program)
 {
-	m_lexer = lexer;
+	
 
 	f_errorParser = false;
 
 	//---deb flags---/
 	f_debugTokenData = true;
-	f_debugAll = false;
+	f_debugAll = true;
 	f_debugOpcodes = false;
 	//--------------//
 
 	m_lineNumber = 1;
 	m_ramLocation = 0;
 
-	m_peekToken = m_lexer->getToken();
+	m_peekToken = m_lexer.getToken();
 	nextToken();
 
 	//{reg-reg,reg-hex}
@@ -33,6 +34,46 @@ Parser::Parser(asmc::Lexer* lexer)
 
 }
 
+void Parser::program()
+{
+	std::cout << rang::bg::blue << "Starting first pass..." << rang::style::reset << "\n";
+
+	while (m_currentToken.m_type != asmc::TokenType::ENDOFLINE && !f_errorParser && !m_lexer.getErrorFlag())
+	{
+		statement();
+		m_lineNumber++;
+	}
+
+	std::cout << std::boolalpha << "lexer error flag " << m_lexer.getErrorFlag() << "\n";
+
+	if (m_lexer.getErrorFlag())
+	{
+		printError("LEXER error occured check");
+		return;
+	}
+
+	//----------------------------Second Pass-------------------------------------//
+
+	if (!f_errorParser)
+	{
+
+		if (f_debugAll)
+		{
+			std::cout << rang::bg::blue << "Printing m_symbolTable" << rang::style::reset << "\n";
+			for (const auto& [key, value] : m_symbolTable)
+			{
+				std::cout << '[' << key << "] address [" << value.m_ramIndex << "]\n";
+			}
+		}
+
+
+		secondPass();
+		printOutput();
+		generateBinaryArr();
+	}
+
+}
+
 void Parser::secondPass()
 {
 	std::cout << rang::bg::blue << "Starting second pass..." << rang::style::reset << "\n";
@@ -41,13 +82,13 @@ void Parser::secondPass()
 	{
 		if (value.m_status == LabelStatus::Undefined)
 		{
-			printError("Undefined label ["+ key +"] line number [test]");			
+			printError("Undefined label [" + key + "] line number [test]");
 			return;
 		}
 		else if (value.m_status == LabelStatus::NotUsed)
 		{
 			//printWarning("Not used label[" + key + "]");
-		
+
 			//check jump table if label used
 			for (const auto& [labelName, memLayout] : m_jumpTable)
 			{
@@ -70,67 +111,7 @@ void Parser::secondPass()
 		}
 	}
 
-	
-}
 
-bool Parser::checkCurrentToken(asmc::TokenType type)
-{
-	return type == m_currentToken.m_type;
-}
-
-bool Parser::checkPeek(asmc::TokenType type)
-{
-	return type == m_peekToken.m_type;
-}
-
-void Parser::nextToken()
-{
-	m_currentToken = m_peekToken;
-	m_peekToken = m_lexer->getToken();//lexer
-}
-
-void Parser::program()
-{
-	std::cout << rang::bg::blue << "Starting first pass..." << rang::style::reset << "\n";
-
-	while (m_currentToken.m_type != asmc::TokenType::ENDOFLINE && !f_errorParser && !m_lexer->getErrorFlag())
-	{		
-		statement();
-		m_lineNumber++;
-	}
-
-	std::cout << std::boolalpha << "lexer error flag "<< m_lexer->getErrorFlag() << "\n";
-		
-	if (m_lexer->getErrorFlag())
-	{
-		printError("LEXER error occured check");
-		return;
-	}
-
-	if (!f_errorParser)
-	{
-		std::cout << rang::bg::blue << "Printing m_symbolTable" << rang::style::reset << "\n";
-
-		for (const auto& [key, value] : m_symbolTable)
-		{
-			std::cout << '[' << key << "] address [" << value.m_ramIndex << "]\n";
-		}
-
-		secondPass();
-		printOutput();
-		generateBinaryArr();
-	}
-	
-}
-
-std::vector<uint8_t> Parser::getBinaryData()
-{
-	return m_binaryProgram;
-}
-
-bool Parser::checkError()
-{
-	return f_errorParser || m_lexer->getErrorFlag(); 
 }
 
 void Parser::statement()
@@ -220,8 +201,8 @@ void Parser::statement()
 
 		m_symbolTable[m_currentToken.m_text] = { m_ramLocation, LabelStatus::NotUsed };
 
-		//DEBUG_printMessage("label address[" + std::to_string(m_ramLocation) + "]");
-
+		
+		//labels doesnt count as opcode
 		m_lineNumber--;
 		nextToken();		
 		break;
@@ -229,6 +210,9 @@ void Parser::statement()
 		break;
 	}	
 }
+
+//-----------------------------------------------------------------------//
+
 
 void Parser::generateBinaryArr()
 {
@@ -255,6 +239,12 @@ void Parser::generateBinaryArr()
 	}
 	
 }
+
+std::vector<uint8_t> Parser::getBinaryData()
+{
+	return m_binaryProgram;
+}
+
 //------------------------------------------------------------------------//
 //-----------------------PRINT--------------------------------------------//
 //------------------------------------------------------------------------//
@@ -294,8 +284,29 @@ void Parser::printOutput()
 }
 
 //------------------------------------------------------------------------//
+//--------------------------UTILS-----------------------------------------//
 //------------------------------------------------------------------------//
-//------------------------------------------------------------------------//
+
+bool Parser::checkCurrentToken(asmc::TokenType type)
+{
+	return type == m_currentToken.m_type;
+}
+
+bool Parser::checkPeek(asmc::TokenType type)
+{
+	return type == m_peekToken.m_type;
+}
+
+bool Parser::checkError()
+{
+	return f_errorParser || m_lexer.getErrorFlag();
+}
+
+void Parser::nextToken()
+{
+	m_currentToken = m_peekToken;
+	m_peekToken = m_lexer.getToken();//lexer
+}
 
 void Parser::createMemoryLayout(int byteAmount, int opcode)
 {
@@ -329,8 +340,7 @@ void Parser::createMemoryLayout(int byteAmount, int opcode)
 bool Parser::expect(asmc::Token token, asmc::TokenType expectedIdent)
 {
 	if (token.m_type != expectedIdent)
-	{
-				
+	{				
 		printError("Parser::expect(TokenType):: expected["+ std::string(magic_enum::enum_name(expectedIdent)) + "]\n");	
 		return false;
 	}
@@ -374,6 +384,7 @@ void Parser::parseALUcommands()
 	}
 }
 
+//<JMP/JGZ/JUC...> = JMP | JGZ | ... <JUMPLOC>
 void Parser::parseJumpCommands()
 {
 	int opcode = m_currentToken.m_type;
@@ -422,6 +433,7 @@ void Parser::parseJumpCommands()
 	nextToken();//m_currentToken => Label?
 }
 
+//<OUT> = OUT <REGISTER> | <ADDRESS> | <REGADR>
 void Parser::parseOUT()
 {
 
@@ -480,6 +492,7 @@ void Parser::parseOUT()
 
 }
 
+//<MOV> = MOV <REGISTER> <REGISTER>
 void Parser::parseMOV()
 {
 	nextToken();//m_currentToken => rx
