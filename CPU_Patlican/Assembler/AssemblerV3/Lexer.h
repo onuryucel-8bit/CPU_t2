@@ -4,6 +4,7 @@
 #include <optional>
 #include <string>
 #include <cctype>
+#include <cstdint>
 
 #include "../LibsLocal/magic_enum/magic_enum.hpp"
 #include "../LibsLocal/rang.hpp"
@@ -14,7 +15,6 @@ namespace asmc
 {
 
 //TODO std icinde bunun tanimi olmasi lazim onu kullan
-using uchar = unsigned char;
 
 enum TokenType
 {
@@ -23,13 +23,7 @@ enum TokenType
 
 	ORIGIN = 0x52,	
 	DB,	//define byte
-	DEFINE,	
-	VARNAME,
 	NEWLINE,	
-
-	NUMBER ,
-	//IDENT,
-	//STRING,
 
 	LABEL ,
 	JUMPLOC ,
@@ -45,7 +39,6 @@ enum TokenType
 	STR = 0x03,
 	MOV = 0x04,
 	OUT = 0x05,
-
 
 	ADD = 0x08,
 	SUB = 0x09,
@@ -65,13 +58,7 @@ enum TokenType
 	JGZ = 0x23,
 	JSC = 0x25,
 	JUC = 0x26,
-
-	//math for macro and variables
-	PLUS,
-	MINUS,
-	SLASH,
-	ASTERISK,
-
+	
 	EMPTY
 };
 

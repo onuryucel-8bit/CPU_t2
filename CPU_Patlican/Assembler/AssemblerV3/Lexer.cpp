@@ -186,7 +186,7 @@ asmc::Token Lexer::lexDotPart()
 asmc::Token Lexer::lexRegPart()
 {	
 	nextChar();
-	if (isxdigit(static_cast<uchar>(peek())))
+	if (isxdigit(static_cast<uint8_t>(peek())))
 	{
 		std::cout << "ERROR invalid reg operand it should be 4bit\n";
 		return EMPTY_TOKEN;
@@ -199,7 +199,7 @@ asmc::Token Lexer::lexHexNumberPart()
 	nextChar();//skip 0
 	nextChar();//skip x
 
-	if (!isxdigit(static_cast<uchar>(peek())))
+	if (!isxdigit(static_cast<uint8_t>(peek())))
 	{
 		std::cout << "ERROR invalid number operand it should be 4bit\n";
 		return EMPTY_TOKEN;
@@ -223,19 +223,7 @@ asmc::Token Lexer::lexSingleChar()
 
 	switch (m_currentChar)
 	{
-	case '+':
-		token = { std::string(1,m_currentChar), asmc::TokenType::PLUS };
-		break;
-	case '-':
-		token = { std::string(1,m_currentChar), asmc::TokenType::MINUS };
-		break;
-	case '/':
-		token = { std::string(1,m_currentChar), asmc::TokenType::SLASH };
-		break;
-	case '*':
-		token = { std::string(1,m_currentChar), asmc::TokenType::ASTERISK };
-		break;
-
+	
 	case '\n':
 		//std::cout << "LEXER newline detected\n";
 		token = { std::string(1,m_currentChar), TokenType::NEWLINE };
@@ -287,7 +275,7 @@ asmc::Token Lexer::lexSingleChar()
 //is 0xfa
 bool Lexer::isNumberHex()
 {
-	if (m_currentChar == '0' && peek() == 'x' && std::isxdigit(static_cast<uchar>(peekOverX())))
+	if (m_currentChar == '0' && peek() == 'x' && std::isxdigit(static_cast<uint8_t>(peekOverX())))
 	{
 		return true;
 	}
@@ -299,7 +287,7 @@ bool Lexer::isOperand()
 {
 	//isxdigit() checks next char is it hex?
 	//register ?
-	if (m_currentChar == 'r' && std::isxdigit(static_cast<uchar>(peek())))
+	if (m_currentChar == 'r' && std::isxdigit(static_cast<uint8_t>(peek())))
 	{
 		return true;
 	}

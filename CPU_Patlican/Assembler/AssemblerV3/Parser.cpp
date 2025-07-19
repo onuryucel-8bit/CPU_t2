@@ -150,11 +150,7 @@ void Parser::statement()
 
 	switch (m_currentToken.m_type)
 	{
-
-	case asmc::TokenType::DEFINE:
-		parseDEFINE();
-		break;
-
+	
 	case asmc::TokenType::DB:
 		parseDB();
 		break;
@@ -374,7 +370,7 @@ void Parser::parseALUcommands()
 	}
 	else
 	{
-		printError("unexcepted statement\n");		
+		printError("parseALUcommands():: unexcepted statement\n");		
 	}
 }
 
@@ -567,6 +563,7 @@ void Parser::parseLOAD()
 	}
 }
 
+//<STR> = STR <ADDRESS> <REGISTER>
 void Parser::parseSTR()
 {
 	int opcode = m_currentToken.m_type;
@@ -594,9 +591,14 @@ void Parser::parseSTR()
 		nextToken();
 		nextToken();
 	}
+	else
+	{
+		printError("parseSTR():: check REGISTER part");
+	}
 
 }
 
+//<NOT> = NOT <REGISTER>
 void Parser::parseNOT()
 {
 	int opcode = m_currentToken.m_type;
@@ -625,6 +627,7 @@ void Parser::parseNOT()
 	}
 }
 
+//<ADC> = <REGISTER>
 void Parser::parseADC()
 {
 	int opcode = m_currentToken.m_type;
@@ -653,6 +656,7 @@ void Parser::parseADC()
 	}
 }
 
+//<ORIGIN> = .ORIGIN <hexnumber>
 void Parser::parseORIGIN()
 {
 	nextToken();
@@ -670,6 +674,7 @@ void Parser::parseORIGIN()
 	nextToken();
 }
 
+//<DB> ::= .DB <hexNumber>+
 void Parser::parseDB()
 {
 	nextToken();
@@ -701,11 +706,5 @@ void Parser::parseDB()
 	nextToken();
 
 }
-
-void Parser::parseDEFINE()
-{
-	//#DEFINE <VARNAME> <HEX>
-}
-
 
 }
