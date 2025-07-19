@@ -81,6 +81,8 @@ struct Token
 	TokenType m_type = TokenType::EMPTY;
 };
 
+#define EMPTY_TOKEN { "", asmc::TokenType::EMPTY }
+
 class Lexer
 {
 public:
@@ -94,7 +96,7 @@ public:
 	//0x4f peeks over 'x' returns 4
 	char peekOverX();
 	
-	Token getToken();
+	[[nodiscard]] Token getToken();
 
 	bool getErrorFlag();
 	
@@ -115,6 +117,17 @@ private:
 
 	//str token enum icerisinde tanimlimi
 	bool checkIfKeyword(std::string token);
+
+	//.ORIGIN .DB
+	
+	[[nodiscard]] asmc::Token lexDotPart();
+	//rx	
+	[[nodiscard]] asmc::Token lexRegPart();
+	//0xff
+	[[nodiscard]] asmc::Token lexHexNumberPart();
+	//+,-,@,\n,EOF.... single char
+	[[nodiscard]] asmc::Token lexSingleChar();
+
 
 	int m_position;
 	std::string m_program;

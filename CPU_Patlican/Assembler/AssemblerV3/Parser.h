@@ -108,6 +108,11 @@ private:
 
 
 	bool f_errorParser;
+	
+	bool f_debugTokenData;
+	bool f_debugOpcodes;
+	bool f_debugAll;
+
 	int m_lineNumber;
 
 	int m_ramLocation;

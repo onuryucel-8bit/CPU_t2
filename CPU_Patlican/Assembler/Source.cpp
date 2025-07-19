@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
 	brp.run(outputFile + ".bin", a);
 }
 
-//TODO .origin .db ve #define anahtarlarini ekle
+//TODO #define anahtarlarini ekle
 
 //HATALAR
 //ram adres sapmasi olursa gidip ramLocation i parseX altinda arttirmis olmalisin

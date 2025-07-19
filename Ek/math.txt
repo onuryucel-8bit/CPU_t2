@@ -1,2 +1,4 @@
 sin :: So how does your computer ACTUALLY compute sine? Basics of trig and more…:: https://www.youtube.com/watch?v=kkMt4lrJzs8
 sin :: Bhāskara I's sine approximation formula :: https://en.wikipedia.org/wiki/Bh%C4%81skara_I%27s_sine_approximation_formula
+
+Binary: Plusses & Minuses (Why We Use Two's Complement) - Computerphile :: https://www.youtube.com/watch?v=lKTsv6iVxV4&list=WL&index=1&t=4s

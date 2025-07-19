@@ -9,6 +9,13 @@ Parser::Parser(asmc::Lexer* lexer)
 	m_lexer = lexer;
 
 	f_errorParser = false;
+
+	//---deb flags---/
+	f_debugTokenData = true;
+	f_debugAll = false;
+	f_debugOpcodes = false;
+	//--------------//
+
 	m_lineNumber = 1;
 	m_ramLocation = 0;
 
@@ -34,8 +41,7 @@ void Parser::secondPass()
 	{
 		if (value.m_status == LabelStatus::Undefined)
 		{
-			printError("Undefined label ["+ key +"] line number [test]");
-			f_errorParser = true;
+			printError("Undefined label ["+ key +"] line number [test]");			
 			return;
 		}
 		else if (value.m_status == LabelStatus::NotUsed)
@@ -88,22 +94,20 @@ void Parser::program()
 	std::cout << rang::bg::blue << "Starting first pass..." << rang::style::reset << "\n";
 
 	while (m_currentToken.m_type != asmc::TokenType::ENDOFLINE && !f_errorParser && !m_lexer->getErrorFlag())
-	{
-		
+	{		
 		statement();
 		m_lineNumber++;
 	}
 
 	std::cout << std::boolalpha << "lexer error flag "<< m_lexer->getErrorFlag() << "\n";
-	
-	
-
+		
 	if (m_lexer->getErrorFlag())
 	{
 		printError("LEXER error occured check");
+		return;
 	}
 
-	if (!f_errorParser && !m_lexer->getErrorFlag())
+	if (!f_errorParser)
 	{
 		std::cout << rang::bg::blue << "Printing m_symbolTable" << rang::style::reset << "\n";
 
@@ -131,6 +135,19 @@ bool Parser::checkError()
 
 void Parser::statement()
 {
+	if (f_debugTokenData || f_debugAll)
+	{
+		if (m_currentToken.m_text == "\n")
+		{
+			std::cout << "CurrentToken.txt[" << "\\n" << "]\n";
+		}
+		else
+		{
+			std::cout << "CurrentToken.txt[" << m_currentToken.m_text << "]\n";
+		}
+		
+	}
+
 	switch (m_currentToken.m_type)
 	{
 
@@ -201,8 +218,7 @@ void Parser::statement()
 		if (m_symbolTable.contains(m_currentToken.m_text) && (m_symbolTable[m_currentToken.m_text].m_status == LabelStatus::NotUsed || m_symbolTable[m_currentToken.m_text].m_status == LabelStatus::Used))
 		{
 			//m_lineNumber++;
-			printError("statement():: Label [" + m_currentToken.m_text + "] defined twice or more \n");
-			f_errorParser = true;
+			printError("statement():: Label [" + m_currentToken.m_text + "] defined twice or more \n");			
 			break;
 		}
 
@@ -268,6 +284,8 @@ void Parser::printError(std::string message)
 		<< " line number = "<< m_lineNumber 
 		<< " next and peek Token [" << m_currentToken.m_text << " " << m_peekToken.m_text
 		<< "]" << rang::style::reset << "\n";
+
+	f_errorParser = true;
 }
 
 void Parser::printOutput()
@@ -317,8 +335,7 @@ bool Parser::expect(asmc::Token token, asmc::TokenType expectedIdent)
 	if (token.m_type != expectedIdent)
 	{
 				
-		printError("expect(TokenType):: expected["+ std::string(magic_enum::enum_name(expectedIdent)) + "]\n");
-		f_errorParser = true;
+		printError("Parser::expect(TokenType):: expected["+ std::string(magic_enum::enum_name(expectedIdent)) + "]\n");	
 		return false;
 	}
 	
@@ -357,8 +374,7 @@ void Parser::parseALUcommands()
 	}
 	else
 	{
-		printError("unexcepted statement\n");
-		f_errorParser = true;
+		printError("unexcepted statement\n");		
 	}
 }
 
@@ -546,8 +562,7 @@ void Parser::parseLOAD()
 	}
 	else
 	{
-		printError("parseLoad():: undefined second operand ["+m_peekToken.m_text+"]");
-		f_errorParser = true;
+		printError("parseLoad():: undefined second operand ["+m_peekToken.m_text+"]");		
 		return;
 	}
 }
@@ -647,6 +662,11 @@ void Parser::parseORIGIN()
 	}
 
 	m_ramLocation = rdx::hexToDeC(m_currentToken.m_text);
+
+	if (m_ramLocation > 0xff)
+	{
+		printError("Parser::parseORIGIN:: RAM location out of range expected < 0xff");
+	}
 	nextToken();
 }
 
